@@ -1,0 +1,52 @@
+query {
+  workbooks {
+    id
+    name
+    projectName
+    uri
+    owner {
+      id
+      name
+      username
+      email
+    }
+    views {
+      id
+      name
+      __typename
+      createdAt
+      updatedAt
+      path
+    }
+    upstreamDatasources {
+      id
+      name
+      uri
+      hasExtracts
+      extractLastRefreshTime
+      upstreamDatabases {
+        name
+        __typename
+        connectionType
+      }
+    }
+    embeddedDatasources {
+      id
+      name
+      hasExtracts
+      extractLastRefreshTime
+      upstreamDatabases {
+        name
+        __typename
+        connectionType
+      }
+    }
+    embeddedDatasourcesConnection {
+      totalCount
+    }
+    tags {
+      id
+      name
+    }
+  }
+}

@@ -1,0 +1,5 @@
+connection_id,datasource_id,database_name,connection_type,server_name,port,username,created_at,updated_at
+conn-001-rst-123,ds-001-uvw-123,SalesDB,PostgreSQL,sales-db.company.com,5432,sales_user,2024-01-15T08:30:00Z,2024-03-15T08:30:00Z
+conn-002-rst-456,ds-002-uvw-456,HRDB,MySQL,hr-db.company.com,3306,hr_user,2024-02-01T10:15:00Z,2024-03-14T23:45:00Z
+conn-003-rst-789,ds-003-uvw-789,FinanceDB,SQL Server,finance-db.company.com,1433,finance_user,2024-01-20T14:45:00Z,2024-03-15T01:15:00Z
+conn-004-rst-012,ds-004-uvw-012,OpsDB,Oracle,ops-db.company.com,1521,ops_user,2024-02-10T09:30:00Z,2024-03-14T22:00:00Z 

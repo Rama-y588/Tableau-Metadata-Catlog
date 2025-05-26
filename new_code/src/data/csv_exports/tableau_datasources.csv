@@ -1,0 +1,4 @@
+id,name,uri,has_extracts,extract_last_refresh_time,workbook_id,type,created_at,updated_at
+ds_up_x1,CRM Data,https://example.com/datasources/crm_data,True,2024-05-24 23:00:00+00:00,123,upstream,2025-05-26 01:49:45.080024,2025-05-26 01:49:45.080024
+ds_emb_y2,Excel Sales Forecast,,,,123,embedded,2025-05-26 01:49:45.080028,2025-05-26 01:49:45.080029
+ds_up_z3,HRIS Database,jdbc:sqlserver://hrdb.example.com,True,2024-05-25 01:00:00+00:00,456,upstream,2025-05-26 01:49:45.080031,2025-05-26 01:49:45.080033

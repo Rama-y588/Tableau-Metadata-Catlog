@@ -1,0 +1,4 @@
+id,name,workbook_id,path,created_at,updated_at,type
+view_a1,Overview,123,/views/overview,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00,View
+view_b2,Regional Performance,123,/views/regional_performance,2024-01-16 11:30:00+00:00,2024-01-17 09:15:00+00:00,View
+view_c3,Employee Count by Department,456,/views/emp_by_dept,2024-03-01 08:00:00+00:00,2024-03-01 08:00:00+00:00,View

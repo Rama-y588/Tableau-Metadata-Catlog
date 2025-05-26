@@ -1,0 +1,187 @@
+{
+    "data": {
+        "workbooks": [
+            {
+                "id": "wb-001-abc-123",
+                "name": "Sales Performance Dashboard",
+                "projectName": "Sales Analytics",
+                "owner": {
+                    "name": "John Smith",
+                    "username": "john.smith@company.com",
+                    "email": "john.smith@company.com"
+                },
+                "views": [
+                    {
+                        "name": "Sales Overview"
+                    },
+                    {
+                        "name": "Regional Performance"
+                    },
+                    {
+                        "name": "Product Analysis"
+                    }
+                ],
+                "upstreamDatasources": [
+                    {
+                        "id": "ds-001-xyz-789",
+                        "name": "Sales Data Warehouse",
+                        "hasExtracts": true,
+                        "extractLastRefreshTime": "2024-03-15T08:30:00Z",
+                        "upstreamDatabases": [
+                            {
+                                "id": "db-001-456",
+                                "name": "sales_prod_db",
+                                "__typename": "DatabaseServer",
+                                "connectionType": "snowflake"
+                            }
+                        ]
+                    }
+                ],
+                "embeddedDatasources": [],
+                "embeddedDatasourcesConnection": {
+                    "totalCount": 0
+                },
+                "tags": ["sales", "performance", "dashboard"]
+            },
+            {
+                "id": "wb-002-def-456",
+                "name": "HR Analytics Portal",
+                "projectName": "Human Resources",
+                "owner": {
+                    "name": "Sarah Johnson",
+                    "username": "sarah.johnson@company.com",
+                    "email": "sarah.johnson@company.com"
+                },
+                "views": [
+                    {
+                        "name": "Employee Overview"
+                    },
+                    {
+                        "name": "Turnover Analysis"
+                    },
+                    {
+                        "name": "Recruitment Metrics"
+                    },
+                    {
+                        "name": "Training Dashboard"
+                    }
+                ],
+                "upstreamDatasources": [],
+                "embeddedDatasources": [
+                    {
+                        "id": "ds-002-uvw-123",
+                        "name": "HR Master Data",
+                        "hasExtracts": true,
+                        "extractLastRefreshTime": "2024-03-14T23:45:00Z",
+                        "upstreamDatabases": [
+                            {
+                                "id": "db-002-789",
+                                "name": "hr_system",
+                                "__typename": "DatabaseServer",
+                                "connectionType": "oracle"
+                            }
+                        ]
+                    }
+                ],
+                "embeddedDatasourcesConnection": {
+                    "totalCount": 1
+                },
+                "tags": ["hr", "analytics", "employee"]
+            },
+            {
+                "id": "wb-003-ghi-789",
+                "name": "Financial Reporting Suite",
+                "projectName": "Finance",
+                "owner": {
+                    "name": "Michael Chen",
+                    "username": "michael.chen@company.com",
+                    "email": "michael.chen@company.com"
+                },
+                "views": [
+                    {
+                        "name": "P&L Statement"
+                    },
+                    {
+                        "name": "Balance Sheet"
+                    },
+                    {
+                        "name": "Cash Flow Analysis"
+                    },
+                    {
+                        "name": "Budget vs Actual"
+                    },
+                    {
+                        "name": "Financial KPIs"
+                    }
+                ],
+                "upstreamDatasources": [
+                    {
+                        "id": "ds-003-rst-456",
+                        "name": "Financial Data Mart",
+                        "hasExtracts": true,
+                        "extractLastRefreshTime": "2024-03-15T01:15:00Z",
+                        "upstreamDatabases": [
+                            {
+                                "id": "db-003-012",
+                                "name": "finance_prod",
+                                "__typename": "DatabaseServer",
+                                "connectionType": "sqlserver"
+                            }
+                        ]
+                    }
+                ],
+                "embeddedDatasources": [
+                    {
+                        "id": "ds-004-opq-789",
+                        "name": "Budget Data",
+                        "hasExtracts": true,
+                        "extractLastRefreshTime": "2024-03-14T22:00:00Z",
+                        "upstreamDatabases": [
+                            {
+                                "id": "db-004-345",
+                                "name": "budget_2024.xlsx",
+                                "__typename": "File",
+                                "connectionType": "excel-direct"
+                            }
+                        ]
+                    }
+                ],
+                "embeddedDatasourcesConnection": {
+                    "totalCount": 1
+                },
+                "tags": ["finance", "reporting", "budget"]
+            },
+            {
+                "id": "wb-004-jkl-012",
+                "name": "Supply Chain Monitor",
+                "projectName": "Operations",
+                "owner": {
+                    "name": "Lisa Wong",
+                    "username": "lisa.wong@company.com",
+                    "email": "lisa.wong@company.com"
+                },
+                "views": [
+                    {
+                        "name": "Inventory Status"
+                    },
+                    {
+                        "name": "Supplier Performance"
+                    },
+                    {
+                        "name": "Order Fulfillment"
+                    },
+                    {
+                        "name": "Logistics Dashboard"
+                    }
+                ],
+                "upstreamDatasources": [],
+                "embeddedDatasources": [],
+                "embeddedDatasourcesConnection": {
+                    "totalCount": 0
+                },
+                "tags": ["supply-chain", "operations", "inventory"]
+            }
+        ]
+    }
+}
+           

@@ -1,0 +1,508 @@
+{
+  "data": {
+    "workbooks": [
+      {
+        "id": "wb-001",
+        "name": "Sales Analysis Dashboard",
+        "description": "Comprehensive sales analysis across regions and products",
+        "createdAt": "2024-01-15T08:00:00Z",
+        "updatedAt": "2024-03-10T14:30:00Z",
+        "owner": {
+          "id": "user-001",
+          "name": "John Doe",
+          "email": "john.doe@company.com"
+        },
+        "project": {
+          "id": "proj-001",
+          "name": "Sales Analytics"
+        },
+        "dataSources": [
+          {
+            "id": "ds-001",
+            "name": "Sales_Database",
+            "type": "PUBLISHED",
+            "connectionType": "SQL_SERVER",
+            "isEmbedded": false,
+            "hasExtracts": true,
+            "extractLastRefreshTime": "2024-03-10T14:00:00Z",
+            "connectionDetails": {
+              "server": "sql-server.company.com",
+              "database": "SalesDB",
+              "schema": "dbo"
+            }
+          }
+        ],
+        "views": [
+          {
+            "id": "view-001",
+            "name": "Regional Sales Overview",
+            "workbookId": "wb-001",
+            "createdAt": "2024-01-15T08:00:00Z",
+            "updatedAt": "2024-03-10T14:30:00Z",
+            "dataColumns": [
+              {
+                "id": "col-001",
+                "name": "Region",
+                "dataType": "STRING",
+                "role": "DIMENSION"
+              },
+              {
+                "id": "col-002",
+                "name": "Sales Amount",
+                "dataType": "NUMBER",
+                "role": "MEASURE"
+              },
+              {
+                "id": "col-003",
+                "name": "Order Date",
+                "dataType": "DATE",
+                "role": "DIMENSION"
+              }
+            ],
+            "filters": [
+              {
+                "id": "filter-001",
+                "name": "Date Range",
+                "type": "RANGE",
+                "values": ["2024-01-01", "2024-03-31"]
+              },
+              {
+                "id": "filter-002",
+                "name": "Region Selection",
+                "type": "LIST",
+                "values": ["North", "South", "East", "West"]
+              }
+            ],
+            "data": {
+              "rows": [
+                {
+                  "Region": "North",
+                  "Sales Amount": 1250000,
+                  "Order Date": "2024-01-15"
+                },
+                {
+                  "Region": "South",
+                  "Sales Amount": 980000,
+                  "Order Date": "2024-01-15"
+                },
+                {
+                  "Region": "East",
+                  "Sales Amount": 1450000,
+                  "Order Date": "2024-01-15"
+                },
+                {
+                  "Region": "West",
+                  "Sales Amount": 1120000,
+                  "Order Date": "2024-01-15"
+                }
+              ]
+            }
+          },
+          {
+            "id": "view-002",
+            "name": "Product Performance",
+            "workbookId": "wb-001",
+            "createdAt": "2024-01-15T08:00:00Z",
+            "updatedAt": "2024-03-10T14:30:00Z",
+            "dataColumns": [
+              {
+                "id": "col-004",
+                "name": "Product Category",
+                "dataType": "STRING",
+                "role": "DIMENSION"
+              },
+              {
+                "id": "col-005",
+                "name": "Units Sold",
+                "dataType": "NUMBER",
+                "role": "MEASURE"
+              },
+              {
+                "id": "col-006",
+                "name": "Profit Margin",
+                "dataType": "NUMBER",
+                "role": "MEASURE"
+              }
+            ],
+            "filters": [
+              {
+                "id": "filter-003",
+                "name": "Product Category",
+                "type": "LIST",
+                "values": ["Electronics", "Clothing", "Home Goods", "Food"]
+              }
+            ],
+            "data": {
+              "rows": [
+                {
+                  "Product Category": "Electronics",
+                  "Units Sold": 2500,
+                  "Profit Margin": 0.35
+                },
+                {
+                  "Product Category": "Clothing",
+                  "Units Sold": 4500,
+                  "Profit Margin": 0.25
+                },
+                {
+                  "Product Category": "Home Goods",
+                  "Units Sold": 1800,
+                  "Profit Margin": 0.40
+                },
+                {
+                  "Product Category": "Food",
+                  "Units Sold": 3200,
+                  "Profit Margin": 0.15
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "wb-002",
+        "name": "Customer Insights",
+        "description": "Customer behavior and demographics analysis",
+        "createdAt": "2024-02-01T10:00:00Z",
+        "updatedAt": "2024-03-08T16:45:00Z",
+        "owner": {
+          "id": "user-002",
+          "name": "Jane Smith",
+          "email": "jane.smith@company.com"
+        },
+        "project": {
+          "id": "proj-002",
+          "name": "Customer Analytics"
+        },
+        "dataSources": [
+          {
+            "id": "ds-002",
+            "name": "Customer_Data",
+            "type": "EMBEDDED",
+            "connectionType": "EXCEL",
+            "isEmbedded": true,
+            "hasExtracts": false,
+            "connectionDetails": {
+              "filePath": "Customer_Data.xlsx",
+              "sheetName": "Customer_Sheet"
+            }
+          }
+        ],
+        "views": [
+          {
+            "id": "view-003",
+            "name": "Customer Demographics",
+            "workbookId": "wb-002",
+            "createdAt": "2024-02-01T10:00:00Z",
+            "updatedAt": "2024-03-08T16:45:00Z",
+            "dataColumns": [
+              {
+                "id": "col-007",
+                "name": "Age Group",
+                "dataType": "STRING",
+                "role": "DIMENSION"
+              },
+              {
+                "id": "col-008",
+                "name": "Customer Count",
+                "dataType": "NUMBER",
+                "role": "MEASURE"
+              },
+              {
+                "id": "col-009",
+                "name": "Average Purchase Value",
+                "dataType": "NUMBER",
+                "role": "MEASURE"
+              }
+            ],
+            "filters": [
+              {
+                "id": "filter-004",
+                "name": "Age Groups",
+                "type": "LIST",
+                "values": ["18-24", "25-34", "35-44", "45-54", "55+"]
+              }
+            ],
+            "data": {
+              "rows": [
+                {
+                  "Age Group": "18-24",
+                  "Customer Count": 2500,
+                  "Average Purchase Value": 75.50
+                },
+                {
+                  "Age Group": "25-34",
+                  "Customer Count": 4500,
+                  "Average Purchase Value": 125.75
+                },
+                {
+                  "Age Group": "35-44",
+                  "Customer Count": 3800,
+                  "Average Purchase Value": 150.25
+                },
+                {
+                  "Age Group": "45-54",
+                  "Customer Count": 2900,
+                  "Average Purchase Value": 175.80
+                },
+                {
+                  "Age Group": "55+",
+                  "Customer Count": 2100,
+                  "Average Purchase Value": 200.30
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "wb-003",
+        "name": "Marketing Campaign Analysis",
+        "description": "Analysis of marketing campaign performance",
+        "createdAt": "2024-02-15T09:00:00Z",
+        "updatedAt": "2024-03-09T11:20:00Z",
+        "owner": {
+          "id": "user-003",
+          "name": "Mike Johnson",
+          "email": "mike.johnson@company.com"
+        },
+        "project": {
+          "id": "proj-003",
+          "name": "Marketing Analytics"
+        },
+        "dataSources": [
+          {
+            "id": "ds-003",
+            "name": "Campaign_Data_CSV",
+            "type": "FLAT_FILE",
+            "connectionType": "CSV",
+            "isEmbedded": true,
+            "hasExtracts": false,
+            "connectionDetails": {
+              "filePath": "Campaign_Data_2024.csv",
+              "delimiter": ",",
+              "hasHeader": true
+            }
+          },
+          {
+            "id": "ds-004",
+            "name": "Marketing_Database",
+            "type": "PUBLISHED",
+            "connectionType": "POSTGRESQL",
+            "isEmbedded": false,
+            "hasExtracts": true,
+            "extractLastRefreshTime": "2024-03-09T10:00:00Z",
+            "connectionDetails": {
+              "server": "postgres.company.com",
+              "database": "MarketingDB",
+              "schema": "public"
+            }
+          }
+        ],
+        "views": [
+          {
+            "id": "view-004",
+            "name": "Campaign Performance",
+            "workbookId": "wb-003",
+            "createdAt": "2024-02-15T09:00:00Z",
+            "updatedAt": "2024-03-09T11:20:00Z",
+            "dataColumns": [
+              {
+                "id": "col-010",
+                "name": "Campaign Name",
+                "dataType": "STRING",
+                "role": "DIMENSION"
+              },
+              {
+                "id": "col-011",
+                "name": "Impressions",
+                "dataType": "NUMBER",
+                "role": "MEASURE"
+              },
+              {
+                "id": "col-012",
+                "name": "Click Rate",
+                "dataType": "NUMBER",
+                "role": "MEASURE"
+              }
+            ],
+            "data": {
+              "rows": [
+                {
+                  "Campaign Name": "Summer Sale 2024",
+                  "Impressions": 150000,
+                  "Click Rate": 0.045
+                },
+                {
+                  "Campaign Name": "New Product Launch",
+                  "Impressions": 200000,
+                  "Click Rate": 0.032
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "wb-004",
+        "name": "Executive Dashboard",
+        "description": "High-level executive metrics and KPIs",
+        "createdAt": "2024-03-01T08:00:00Z",
+        "updatedAt": "2024-03-10T15:00:00Z",
+        "owner": {
+          "id": "user-004",
+          "name": "Sarah Wilson",
+          "email": "sarah.wilson@company.com"
+        },
+        "project": {
+          "id": "proj-004",
+          "name": "Executive Reports"
+        },
+        "dataSources": [],
+        "views": [
+          {
+            "id": "view-005",
+            "name": "Executive Summary",
+            "workbookId": "wb-004",
+            "createdAt": "2024-03-01T08:00:00Z",
+            "updatedAt": "2024-03-10T15:00:00Z",
+            "dataColumns": [
+              {
+                "id": "col-013",
+                "name": "Metric Name",
+                "dataType": "STRING",
+                "role": "DIMENSION"
+              },
+              {
+                "id": "col-014",
+                "name": "Value",
+                "dataType": "NUMBER",
+                "role": "MEASURE"
+              }
+            ],
+            "data": {
+              "rows": [
+                {
+                  "Metric Name": "Total Revenue",
+                  "Value": 5000000
+                },
+                {
+                  "Metric Name": "Customer Growth",
+                  "Value": 0.15
+                }
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "id": "wb-005",
+        "name": "Regional Performance",
+        "description": "Regional performance metrics with multiple data sources",
+        "createdAt": "2024-02-20T10:00:00Z",
+        "updatedAt": "2024-03-10T16:00:00Z",
+        "owner": {
+          "id": "user-005",
+          "name": "David Brown",
+          "email": "david.brown@company.com"
+        },
+        "project": {
+          "id": "proj-005",
+          "name": "Regional Analytics"
+        },
+        "dataSources": [
+          {
+            "id": "ds-005",
+            "name": "Regional_Sales_Excel",
+            "type": "FLAT_FILE",
+            "connectionType": "EXCEL",
+            "isEmbedded": true,
+            "hasExtracts": false,
+            "connectionDetails": {
+              "filePath": "Regional_Sales_2024.xlsx",
+              "sheetName": "Sales_Data"
+            }
+          },
+          {
+            "id": "ds-006",
+            "name": "Regional_Database",
+            "type": "PUBLISHED",
+            "connectionType": "ORACLE",
+            "isEmbedded": false,
+            "hasExtracts": true,
+            "extractLastRefreshTime": "2024-03-10T15:00:00Z",
+            "connectionDetails": {
+              "server": "oracle.company.com",
+              "database": "RegionalDB",
+              "schema": "REGIONAL"
+            }
+          },
+          {
+            "id": "ds-007",
+            "name": "Regional_CSV_Data",
+            "type": "FLAT_FILE",
+            "connectionType": "CSV",
+            "isEmbedded": true,
+            "hasExtracts": false,
+            "connectionDetails": {
+              "filePath": "Regional_Metrics_2024.csv",
+              "delimiter": ",",
+              "hasHeader": true
+            }
+          }
+        ],
+        "views": [
+          {
+            "id": "view-006",
+            "name": "Regional Overview",
+            "workbookId": "wb-005",
+            "createdAt": "2024-02-20T10:00:00Z",
+            "updatedAt": "2024-03-10T16:00:00Z",
+            "dataColumns": [
+              {
+                "id": "col-015",
+                "name": "Region",
+                "dataType": "STRING",
+                "role": "DIMENSION"
+              },
+              {
+                "id": "col-016",
+                "name": "Performance Score",
+                "dataType": "NUMBER",
+                "role": "MEASURE"
+              }
+            ],
+            "data": {
+              "rows": [
+                {
+                  "Region": "North America",
+                  "Performance Score": 0.85
+                },
+                {
+                  "Region": "Europe",
+                  "Performance Score": 0.78
+                }
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "metadata": {
+      "totalCount": 5,
+      "pageSize": 10,
+      "currentPage": 1,
+      "lastUpdated": "2024-03-10T16:00:00Z",
+      "apiVersion": "1.0",
+      "dataSourceTypes": {
+        "published": 3,
+        "embedded": 2,
+        "flatFiles": 3,
+        "noDataSources": 1
+      }
+    }
+  },
+  "errors": null,
+  "warnings": null,
+  "status": "success"
+} 

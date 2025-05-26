@@ -1,0 +1,7 @@
+datasource_id,datasource_name,datasource_type,has_extract,last_refresh_time,created_at,updated_at
+ds-001-uvw-123,Sales Database,Upstream,true,2024-03-15T08:30:00Z,2024-01-15T08:30:00Z,2024-03-15T08:30:00Z
+ds-002-uvw-456,HR Database,Upstream,true,2024-03-14T23:45:00Z,2024-02-01T10:15:00Z,2024-03-14T23:45:00Z
+ds-003-uvw-789,Financial Database,Upstream,true,2024-03-15T01:15:00Z,2024-01-20T14:45:00Z,2024-03-15T01:15:00Z
+ds-004-uvw-012,Operations Database,Upstream,true,2024-03-14T22:00:00Z,2024-02-10T09:30:00Z,2024-03-14T22:00:00Z
+ds-005-uvw-345,Sales Extract,Embedded,true,2024-03-15T08:30:00Z,2024-01-15T08:30:00Z,2024-03-15T08:30:00Z
+ds-006-uvw-678,HR Extract,Embedded,true,2024-03-14T23:45:00Z,2024-02-01T10:15:00Z,2024-03-14T23:45:00Z 

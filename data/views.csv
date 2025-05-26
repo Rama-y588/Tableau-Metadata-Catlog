@@ -1,0 +1,7 @@
+view_id,workbook_id,view_name,view_type,created_at,updated_at,last_accessed_at
+vw-001-xyz-123,wb-001-abc-123,Sales Overview,Dashboard,2024-01-15T08:30:00Z,2024-03-15T08:30:00Z,2024-03-15T08:30:00Z
+vw-002-xyz-456,wb-001-abc-123,Regional Performance,Worksheet,2024-01-15T08:30:00Z,2024-03-15T08:30:00Z,2024-03-15T08:30:00Z
+vw-003-xyz-789,wb-002-def-456,Employee Metrics,Dashboard,2024-02-01T10:15:00Z,2024-03-14T23:45:00Z,2024-03-14T23:45:00Z
+vw-004-xyz-012,wb-002-def-456,Department Analysis,Worksheet,2024-02-01T10:15:00Z,2024-03-14T23:45:00Z,2024-03-14T23:45:00Z
+vw-005-xyz-345,wb-003-ghi-789,Financial Summary,Dashboard,2024-01-20T14:45:00Z,2024-03-15T01:15:00Z,2024-03-15T01:15:00Z
+vw-006-xyz-678,wb-004-jkl-012,Inventory Status,Worksheet,2024-02-10T09:30:00Z,2024-03-14T22:00:00Z,2024-03-14T22:00:00Z 

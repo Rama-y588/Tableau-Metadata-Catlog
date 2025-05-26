@@ -1,0 +1,87 @@
+Table users {
+  id varchar [pk]
+  name varchar
+  username varchar [unique]
+  email varchar [unique]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table workbooks {
+  id varchar [pk]
+  name varchar
+  project_name varchar
+  uri varchar
+  owner_id varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table views {
+  id varchar [pk]
+  name varchar
+  workbook_id varchar
+  path varchar
+  created_at timestamp
+  updated_at timestamp
+  type varchar // for __typename
+}
+
+Table datasources {
+  id varchar [pk]
+  name varchar
+  uri varchar [null]
+  has_extracts boolean
+  extract_last_refresh_time timestamp [null]
+  workbook_id varchar
+  type varchar // 'upstream' or 'embedded'
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table databases {
+  id varchar [pk]
+  name varchar
+  connection_type varchar
+  type varchar // for __typename
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table datasource_databases {
+  datasource_id varchar
+  database_id varchar
+
+  indexes {
+    (datasource_id, database_id) [pk]
+  }
+}
+
+Table tags {
+  id varchar [pk]
+  name varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table workbook_tags {
+  workbook_id varchar
+  tag_id varchar
+
+  indexes {
+    (workbook_id, tag_id) [pk]
+  }
+}
+
+Ref: workbooks.owner_id > users.id
+Ref: views.workbook_id > workbooks.id
+Ref: datasources.workbook_id > workbooks.id
+Ref: datasource_databases.datasource_id > datasources.id
+Ref: datasource_databases.database_id > databases.id
+Ref: workbook_tags.workbook_id > workbooks.id
+Ref: workbook_tags.tag_id > tags.id
+
+// Indexes for better query performance - DBML does not have direct syntax for named indexes outside of table blocks like this.
+// These would typically be defined within the table definition using the `indexes` block if they are table-specific.
+// For multi-column indexes or specific index types, you might add comments or rely on the ORM/database specific migrations.
+// The primary keys defined in the table already create indexes.

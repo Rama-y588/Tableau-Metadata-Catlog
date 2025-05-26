@@ -1,0 +1,7 @@
+workbook_id,datasource_id,is_embedded
+wb-001-abc-123,ds-001-uvw-123,false
+wb-001-abc-123,ds-005-uvw-345,true
+wb-002-def-456,ds-002-uvw-456,false
+wb-002-def-456,ds-006-uvw-678,true
+wb-003-ghi-789,ds-003-uvw-789,false
+wb-004-jkl-012,ds-004-uvw-012,false 
