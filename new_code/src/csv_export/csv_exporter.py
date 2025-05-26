@@ -20,14 +20,16 @@ class TableauCSVExporter:
             "id", "name", "workbook_id", "path", "created_at", "updated_at", "type"
         ],
         "datasources": [
-            "id", "name", "uri", "has_extracts", "extract_last_refresh_time",
-            "workbook_id", "type", "created_at", "updated_at"
+            "id", "name", "uri", "has_extracts", "extract_last_refresh_time", "type", "created_at", "updated_at"
         ],
-        "databases": [
-            "id", "name", "connection_type", "type", "created_at", "updated_at"
+        "workbook_datasources": [
+            "workbook_id", "datasource_id"
         ],
-        "datasource_databases": [
-            "datasource_id", "database_id"
+        "connections": [
+            "id", "name", "connection_type", "connects_to", "created_at", "updated_at"
+        ],
+        "datasource_connections": [
+            "datasource_id", "connection_id"
         ],
         "tags": [
             "id", "name", "created_at", "updated_at"
@@ -44,10 +46,126 @@ class TableauCSVExporter:
             output_dir (str): Directory to store CSV files. Defaults to data/csv_exports.
         """
         if output_dir is None:
-            self.output_dir = Path(__file__).parent.parent / 'data' / 'csv_exports'
+            self.output_dir = Path(__file__).parent.parent.parent / 'data' / 'csv_exports'
         else:
             self.output_dir = Path(output_dir)
         self.output_dir.mkdir(parents=True, exist_ok=True)
+
+    def transform_data(self, data: Dict[str, List[Dict[str, Any]]]) -> Dict[str, List[Dict[str, Any]]]:
+        """
+        Transform the input data to match the schema structure, including relation tables.
+        Args:
+            data: Dictionary of tables and their records
+        Returns:
+            Transformed data matching the schema
+        """
+        transformed = {}
+        app_logger.info(f"Starting data transformation. Input tables: {list(data.keys())}")
+        
+        # Transform users
+        if 'users' in data:
+            transformed['users'] = [{
+                'id': record.get('id'),
+                'name': record.get('name'),
+                'username': record.get('username'),
+                'email': record.get('email'),
+                'created_at': record.get('created_at'),
+                'updated_at': record.get('updated_at')
+            } for record in data['users']]
+            app_logger.info(f"Transformed {len(transformed['users'])} users")
+        
+        # Transform workbooks
+        if 'workbooks' in data:
+            transformed['workbooks'] = [{
+                'id': record.get('id'),
+                'name': record.get('name'),
+                'project_name': record.get('project_name'),
+                'uri': record.get('uri'),
+                'owner_id': record.get('owner_id'),
+                'created_at': record.get('created_at'),
+                'updated_at': record.get('updated_at')
+            } for record in data['workbooks']]
+            app_logger.info(f"Transformed {len(transformed['workbooks'])} workbooks")
+        
+        # Transform views
+        if 'views' in data:
+            transformed['views'] = [{
+                'id': record.get('id'),
+                'name': record.get('name'),
+                'workbook_id': record.get('workbook_id'),
+                'path': record.get('path'),
+                'created_at': record.get('created_at'),
+                'updated_at': record.get('updated_at'),
+                'type': record.get('__typename')
+            } for record in data['views']]
+            app_logger.info(f"Transformed {len(transformed['views'])} views")
+        
+        # Transform datasources
+        if 'datasources' in data:
+            transformed['datasources'] = [{
+                'id': record.get('id'),
+                'name': record.get('name'),
+                'uri': record.get('uri'),
+                'has_extracts': record.get('has_extracts', False),
+                'extract_last_refresh_time': record.get('extract_last_refresh_time'),
+                'type': record.get('type', 'upstream'),  # Default to upstream if not specified
+                'created_at': record.get('created_at'),
+                'updated_at': record.get('updated_at')
+            } for record in data['datasources']]
+            app_logger.info(f"Transformed {len(transformed['datasources'])} datasources")
+        
+        # Extract workbook_datasources relations
+        if 'workbook_datasources' in data:
+            transformed['workbook_datasources'] = [{
+                'workbook_id': record.get('workbook_id'),
+                'datasource_id': record.get('datasource_id')
+            } for record in data['workbook_datasources']]
+            app_logger.info(f"Transformed {len(transformed['workbook_datasources'])} workbook_datasources relations")
+        
+        # Transform connections
+        if 'connections' in data:
+            transformed['connections'] = [{
+                'id': record.get('id'),
+                'name': record.get('name'),
+                'connection_type': record.get('connection_type'),
+                'connects_to': record.get('type'),  # Map 'type' to 'connects_to'
+                'created_at': record.get('created_at'),
+                'updated_at': record.get('updated_at')
+            } for record in data['connections']]
+            app_logger.info(f"Transformed {len(transformed['connections'])} connections")
+        
+        # Extract datasource_connections relations
+        if 'datasource_connections' in data:
+            transformed['datasource_connections'] = [{
+                'datasource_id': record.get('datasource_id'),
+                'connection_id': record.get('connection_id')
+            } for record in data['datasource_connections']]
+            app_logger.info(f"Transformed {len(transformed['datasource_connections'])} datasource_connections relations")
+        
+        # Transform tags
+        if 'tags' in data:
+            transformed['tags'] = [{
+                'id': record.get('id'),
+                'name': record.get('name'),
+                'created_at': record.get('created_at'),
+                'updated_at': record.get('updated_at')
+            } for record in data['tags']]
+            app_logger.info(f"Transformed {len(transformed['tags'])} tags")
+        
+        # Extract workbook_tags relations
+        if 'workbook_tags' in data:
+            transformed['workbook_tags'] = [{
+                'workbook_id': record.get('workbook_id'),
+                'tag_id': record.get('tag_id')
+            } for record in data['workbook_tags']]
+            app_logger.info(f"Transformed {len(transformed['workbook_tags'])} workbook_tags relations")
+        
+        # Log the number of records in each table
+        app_logger.info("Final transformed data summary:")
+        for table_name, records in transformed.items():
+            app_logger.info(f"Table {table_name}: {len(records)} records")
+        
+        return transformed
 
     def export_table(
         self, table_name: str, records: List[Dict[str, Any]],
@@ -94,7 +212,7 @@ class TableauCSVExporter:
         prefix: str = '', suffix: str = ''
     ) -> Dict[str, Path]:
         """
-        Export all tables to CSV files.
+        Export all tables to CSV files, including relation tables.
         Args:
             data: Dictionary of tables and their records.
             prefix: Optional prefix for filenames.
@@ -104,12 +222,25 @@ class TableauCSVExporter:
         """
         try:
             app_logger.info("Starting CSV export")
+            app_logger.info(f"Input data contains tables: {list(data.keys())}")
+            
+            # Transform data to match schema, including relation tables
+            transformed_data = self.transform_data(data)
+            app_logger.info(f"Transformed data contains tables: {list(transformed_data.keys())}")
+            
+            # Export transformed data
             exported_files = {}
-            for table_name, records in data.items():
-                filepath = self.export_table(table_name, records, prefix, suffix)
-                if filepath:
-                    exported_files[table_name] = filepath
-            app_logger.info("Successfully exported all tables to CSV")
+            for table_name, records in transformed_data.items():
+                app_logger.info(f"Processing table {table_name} with {len(records)} records")
+                if records:  # Only export if there are records
+                    filepath = self.export_table(table_name, records, prefix, suffix)
+                    if filepath:
+                        exported_files[table_name] = filepath
+                        app_logger.info(f"Successfully exported {len(records)} records to {filepath}")
+                else:
+                    app_logger.warning(f"No records to export for table {table_name}")
+            
+            app_logger.info(f"Successfully exported all tables to CSV. Exported files: {list(exported_files.keys())}")
             return exported_files
         except Exception as e:
             app_logger.error(f"Failed to export data to CSV: {str(e)}")

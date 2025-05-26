@@ -102,43 +102,64 @@ class TableauDataTransformer:
     def transform_datasources(self) -> List[Dict[str, Any]]:
         """Transform datasource data"""
         datasources = []
+        datasource_connections = []  # Store datasource-connection relations
+        
         for workbook in self.data['data']['workbooks']:
             # Process upstream datasources
             for ds in workbook.get('upstreamDatasources', []):
+                datasource_id = ds.get('id')
                 datasources.append({
-                    'id': ds.get('id') or None,
+                    'id': datasource_id,
                     'name': ds.get('name') or None,
                     'uri': ds.get('uri') or None,
-                    'has_extracts': ds.get('hasExtracts') or None,
+                    'has_extracts': ds.get('hasExtracts') or False,
                     'extract_last_refresh_time': self._parse_datetime(ds.get('extractLastRefreshTime')),
-                    'workbook_id': workbook.get('id') or None,
                     'type': 'upstream',
                     'created_at': datetime.now(),
                     'updated_at': datetime.now()
                 })
+                
+                # Process connections for this datasource
+                for db in ds.get('upstreamDatabases', []):
+                    connection_id = f"conn_{len(datasource_connections)}"
+                    datasource_connections.append({
+                        'datasource_id': datasource_id,
+                        'connection_id': connection_id
+                    })
             
             # Process embedded datasources
             for ds in workbook.get('embeddedDatasources', []):
+                datasource_id = ds.get('id')
                 datasources.append({
-                    'id': ds.get('id') or None,
+                    'id': datasource_id,
                     'name': ds.get('name') or None,
                     'uri': None,
-                    'has_extracts': ds.get('hasExtracts') or None,
+                    'has_extracts': ds.get('hasExtracts') or False,
                     'extract_last_refresh_time': self._parse_datetime(ds.get('extractLastRefreshTime')),
-                    'workbook_id': workbook.get('id') or None,
                     'type': 'embedded',
                     'created_at': datetime.now(),
                     'updated_at': datetime.now()
                 })
+                
+                # Process connections for embedded datasources too
+                for db in ds.get('upstreamDatabases', []):
+                    connection_id = f"conn_{len(datasource_connections)}"
+                    datasource_connections.append({
+                        'datasource_id': datasource_id,
+                        'connection_id': connection_id
+                    })
+        
+        # Store datasource-connection relations
+        self.datasource_connections = datasource_connections
         return datasources
     
-    def transform_databases(self) -> List[Dict[str, Any]]:
-        """Transform database data"""
-        databases = set()
-        datasource_relations = []
+    def transform_connections(self) -> List[Dict[str, Any]]:
+        """Transform connection data"""
+        connections = []
+        connection_id_map = {}  # Map to track connection IDs
         
         for workbook in self.data['data']['workbooks']:
-            # Process upstream datasource databases
+            # Process upstream datasource connections
             for ds in workbook.get('upstreamDatasources', []):
                 for db in ds.get('upstreamDatabases', []):
                     db_key = (
@@ -146,10 +167,19 @@ class TableauDataTransformer:
                         db.get('connectionType') or None,
                         db.get('__typename') or None
                     )
-                    databases.add(db_key)
-                    datasource_relations.append((ds.get('id') or None, db.get('name') or None))
+                    if db_key not in connection_id_map:
+                        connection_id = f"conn_{len(connections)}"
+                        connection_id_map[db_key] = connection_id
+                        connections.append({
+                            'id': connection_id,
+                            'name': db.get('name') or None,
+                            'connection_type': db.get('connectionType') or None,
+                            'connects_to': db.get('__typename') or None,
+                            'created_at': datetime.now(),
+                            'updated_at': datetime.now()
+                        })
             
-            # Process embedded datasource databases
+            # Process embedded datasource connections
             for ds in workbook.get('embeddedDatasources', []):
                 for db in ds.get('upstreamDatabases', []):
                     db_key = (
@@ -157,23 +187,19 @@ class TableauDataTransformer:
                         db.get('connectionType') or None,
                         db.get('__typename') or None
                     )
-                    databases.add(db_key)
-                    datasource_relations.append((ds.get('id') or None, db.get('name') or None))
+                    if db_key not in connection_id_map:
+                        connection_id = f"conn_{len(connections)}"
+                        connection_id_map[db_key] = connection_id
+                        connections.append({
+                            'id': connection_id,
+                            'name': db.get('name') or None,
+                            'connection_type': db.get('connectionType') or None,
+                            'connects_to': db.get('__typename') or None,
+                            'created_at': datetime.now(),
+                            'updated_at': datetime.now()
+                        })
         
-        # Create database records
-        db_records = [{
-            'id': f"db_{i}",
-            'name': db[0],
-            'connection_type': db[1],
-            'type': db[2],
-            'created_at': datetime.now(),
-            'updated_at': datetime.now()
-        } for i, db in enumerate(databases)]
-        
-        # Store datasource-database relations
-        self.datasource_database_relations = datasource_relations
-        
-        return db_records
+        return connections
     
     def transform_tags(self) -> List[Dict[str, Any]]:
         """Transform tag data"""
@@ -209,21 +235,25 @@ class TableauDataTransformer:
         try:
             app_logger.info("Starting data transformation")
             
+            # Transform all tables
             result = {
                 'users': self.transform_users(),
                 'workbooks': self.transform_workbooks(),
                 'views': self.transform_views(),
                 'datasources': self.transform_datasources(),
-                'databases': self.transform_databases(),
+                'connections': self.transform_connections(),
                 'tags': self.transform_tags(),
-                'datasource_database_relations': [
+                'workbook_datasources': [
                     {
-                        'datasource_id': rel[0],
-                        'database_id': rel[1]
+                        'workbook_id': workbook.get('id'),
+                        'datasource_id': ds.get('id')
                     }
-                    for rel in getattr(self, 'datasource_database_relations', [])
+                    for workbook in self.data['data']['workbooks']
+                    for ds in workbook.get('upstreamDatasources', []) + workbook.get('embeddedDatasources', [])
+                    if workbook.get('id') and ds.get('id')
                 ],
-                'workbook_tag_relations': [
+                'datasource_connections': getattr(self, 'datasource_connections', []),
+                'workbook_tags': [
                     {
                         'workbook_id': rel[0],
                         'tag_id': rel[1]
@@ -231,6 +261,10 @@ class TableauDataTransformer:
                     for rel in getattr(self, 'workbook_tag_relations', [])
                 ]
             }
+            
+            # Log the number of records in each table
+            for table_name, records in result.items():
+                app_logger.info(f"Transformed {len(records)} records for table {table_name}")
             
             app_logger.info("Successfully transformed all data")
             return result

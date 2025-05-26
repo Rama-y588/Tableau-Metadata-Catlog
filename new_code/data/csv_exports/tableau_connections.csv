@@ -1,0 +1,3 @@
+id,name,connection_type,connects_to,created_at,updated_at
+conn_0,SalesforceDB,Salesforce,,2025-05-26 11:13:09.327358,2025-05-26 11:13:09.327358
+conn_1,SQL_HR,SQL Server,,2025-05-26 11:13:09.327361,2025-05-26 11:13:09.327362

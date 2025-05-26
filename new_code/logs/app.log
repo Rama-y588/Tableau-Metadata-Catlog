@@ -1,0 +1,259 @@
+2025-05-26 11:10:01,368 - my_custom_logger - ERROR - This is an error message
+2025-05-26 11:11:07,509 - tableau_logger - INFO - Logger initialized with file logging only
+2025-05-26 11:11:07,509 - tableau_logger - INFO - Logger initialized
+2025-05-26 11:11:07,509 - tableau_logger - DEBUG - This is a debug message
+2025-05-26 11:11:07,509 - tableau_logger - INFO - This is an info message
+2025-05-26 11:11:07,509 - tableau_logger - WARNING - This is a warning message
+2025-05-26 11:11:07,509 - tableau_logger - ERROR - This is an error message
+2025-05-26 11:11:22,511 - tableau_logger - INFO - Logger initialized with file logging only
+2025-05-26 11:11:22,956 - tableau_logger - INFO - Starting data transformation
+2025-05-26 11:11:22,956 - tableau_logger - INFO - Transformed 2 records for table users
+2025-05-26 11:11:22,956 - tableau_logger - INFO - Transformed 2 records for table workbooks
+2025-05-26 11:11:22,956 - tableau_logger - INFO - Transformed 3 records for table views
+2025-05-26 11:11:22,956 - tableau_logger - INFO - Transformed 3 records for table datasources
+2025-05-26 11:11:22,956 - tableau_logger - INFO - Transformed 2 records for table connections
+2025-05-26 11:11:22,956 - tableau_logger - INFO - Transformed 3 records for table tags
+2025-05-26 11:11:22,956 - tableau_logger - INFO - Transformed 3 records for table workbook_datasources
+2025-05-26 11:11:22,956 - tableau_logger - INFO - Transformed 2 records for table datasource_connections
+2025-05-26 11:11:22,956 - tableau_logger - INFO - Transformed 3 records for table workbook_tags
+2025-05-26 11:11:22,956 - tableau_logger - INFO - Successfully transformed all data
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Starting CSV export
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Input data contains tables: ['users', 'workbooks', 'views', 'datasources', 'connections', 'tags', 'workbook_datasources', 'datasource_connections', 'workbook_tags']
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Starting data transformation. Input tables: ['users', 'workbooks', 'views', 'datasources', 'connections', 'tags', 'workbook_datasources', 'datasource_connections', 'workbook_tags']
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Transformed 2 users
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Transformed 2 workbooks
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Transformed 3 views
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Transformed 3 datasources
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Transformed 3 workbook_datasources relations
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Transformed 2 connections
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Transformed 2 datasource_connections relations
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Transformed 3 tags
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Transformed 3 workbook_tags relations
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Final transformed data summary:
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Table users: 2 records
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Table workbooks: 2 records
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Table views: 3 records
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Table datasources: 3 records
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Table workbook_datasources: 3 records
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Table connections: 2 records
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Table datasource_connections: 2 records
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Table tags: 3 records
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Table workbook_tags: 3 records
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Transformed data contains tables: ['users', 'workbooks', 'views', 'datasources', 'workbook_datasources', 'connections', 'datasource_connections', 'tags', 'workbook_tags']
+2025-05-26 11:11:22,957 - tableau_logger - INFO - Processing table users with 2 records
+2025-05-26 11:11:22,964 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_users.csv
+2025-05-26 11:11:22,964 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_users.csv
+2025-05-26 11:11:22,964 - tableau_logger - INFO - Processing table workbooks with 2 records
+2025-05-26 11:11:22,967 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_workbooks.csv
+2025-05-26 11:11:22,967 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_workbooks.csv
+2025-05-26 11:11:22,967 - tableau_logger - INFO - Processing table views with 3 records
+2025-05-26 11:11:22,969 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_views.csv
+2025-05-26 11:11:22,969 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_views.csv
+2025-05-26 11:11:22,969 - tableau_logger - INFO - Processing table datasources with 3 records
+2025-05-26 11:11:22,971 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_datasources.csv
+2025-05-26 11:11:22,971 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_datasources.csv
+2025-05-26 11:11:22,971 - tableau_logger - INFO - Processing table workbook_datasources with 3 records
+2025-05-26 11:11:22,973 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_workbook_datasources.csv
+2025-05-26 11:11:22,973 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_workbook_datasources.csv
+2025-05-26 11:11:22,973 - tableau_logger - INFO - Processing table connections with 2 records
+2025-05-26 11:11:22,974 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_connections.csv
+2025-05-26 11:11:22,975 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_connections.csv
+2025-05-26 11:11:22,975 - tableau_logger - INFO - Processing table datasource_connections with 2 records
+2025-05-26 11:11:22,976 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_datasource_connections.csv
+2025-05-26 11:11:22,976 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_datasource_connections.csv
+2025-05-26 11:11:22,976 - tableau_logger - INFO - Processing table tags with 3 records
+2025-05-26 11:11:22,978 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_tags.csv
+2025-05-26 11:11:22,978 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_tags.csv
+2025-05-26 11:11:22,978 - tableau_logger - INFO - Processing table workbook_tags with 3 records
+2025-05-26 11:11:22,980 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_workbook_tags.csv
+2025-05-26 11:11:22,980 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\data\csv_exports\tableau_workbook_tags.csv
+2025-05-26 11:11:22,981 - tableau_logger - INFO - Successfully exported all tables to CSV. Exported files: ['users', 'workbooks', 'views', 'datasources', 'workbook_datasources', 'connections', 'datasource_connections', 'tags', 'workbook_tags']
+2025-05-26 11:12:21,949 - tableau_logger - INFO - Logger initialized with file logging only
+2025-05-26 11:12:22,387 - tableau_logger - INFO - Starting data transformation
+2025-05-26 11:12:22,387 - tableau_logger - INFO - Transformed 2 records for table users
+2025-05-26 11:12:22,387 - tableau_logger - INFO - Transformed 2 records for table workbooks
+2025-05-26 11:12:22,387 - tableau_logger - INFO - Transformed 3 records for table views
+2025-05-26 11:12:22,387 - tableau_logger - INFO - Transformed 3 records for table datasources
+2025-05-26 11:12:22,387 - tableau_logger - INFO - Transformed 2 records for table connections
+2025-05-26 11:12:22,388 - tableau_logger - INFO - Transformed 3 records for table tags
+2025-05-26 11:12:22,388 - tableau_logger - INFO - Transformed 3 records for table workbook_datasources
+2025-05-26 11:12:22,388 - tableau_logger - INFO - Transformed 2 records for table datasource_connections
+2025-05-26 11:12:22,388 - tableau_logger - INFO - Transformed 3 records for table workbook_tags
+2025-05-26 11:12:22,388 - tableau_logger - INFO - Successfully transformed all data
+2025-05-26 11:12:22,388 - tableau_logger - INFO - Starting CSV export
+2025-05-26 11:12:22,388 - tableau_logger - INFO - Input data contains tables: ['users', 'workbooks', 'views', 'datasources', 'connections', 'tags', 'workbook_datasources', 'datasource_connections', 'workbook_tags']
+2025-05-26 11:12:22,388 - tableau_logger - INFO - Starting data transformation. Input tables: ['users', 'workbooks', 'views', 'datasources', 'connections', 'tags', 'workbook_datasources', 'datasource_connections', 'workbook_tags']
+2025-05-26 11:12:22,388 - tableau_logger - INFO - Transformed 2 users
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Transformed 2 workbooks
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Transformed 3 views
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Transformed 3 datasources
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Transformed 3 workbook_datasources relations
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Transformed 2 connections
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Transformed 2 datasource_connections relations
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Transformed 3 tags
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Transformed 3 workbook_tags relations
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Final transformed data summary:
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Table users: 2 records
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Table workbooks: 2 records
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Table views: 3 records
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Table datasources: 3 records
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Table workbook_datasources: 3 records
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Table connections: 2 records
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Table datasource_connections: 2 records
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Table tags: 3 records
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Table workbook_tags: 3 records
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Transformed data contains tables: ['users', 'workbooks', 'views', 'datasources', 'workbook_datasources', 'connections', 'datasource_connections', 'tags', 'workbook_tags']
+2025-05-26 11:12:22,389 - tableau_logger - INFO - Processing table users with 2 records
+2025-05-26 11:12:22,395 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_users.csv
+2025-05-26 11:12:22,395 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_users.csv
+2025-05-26 11:12:22,395 - tableau_logger - INFO - Processing table workbooks with 2 records
+2025-05-26 11:12:22,398 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbooks.csv
+2025-05-26 11:12:22,398 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbooks.csv
+2025-05-26 11:12:22,398 - tableau_logger - INFO - Processing table views with 3 records
+2025-05-26 11:12:22,402 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_views.csv
+2025-05-26 11:12:22,402 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_views.csv
+2025-05-26 11:12:22,402 - tableau_logger - INFO - Processing table datasources with 3 records
+2025-05-26 11:12:22,405 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_datasources.csv
+2025-05-26 11:12:22,405 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_datasources.csv
+2025-05-26 11:12:22,405 - tableau_logger - INFO - Processing table workbook_datasources with 3 records
+2025-05-26 11:12:22,406 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbook_datasources.csv
+2025-05-26 11:12:22,406 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbook_datasources.csv
+2025-05-26 11:12:22,406 - tableau_logger - INFO - Processing table connections with 2 records
+2025-05-26 11:12:22,420 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_connections.csv
+2025-05-26 11:12:22,420 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_connections.csv
+2025-05-26 11:12:22,420 - tableau_logger - INFO - Processing table datasource_connections with 2 records
+2025-05-26 11:12:22,422 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_datasource_connections.csv
+2025-05-26 11:12:22,422 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_datasource_connections.csv
+2025-05-26 11:12:22,422 - tableau_logger - INFO - Processing table tags with 3 records
+2025-05-26 11:12:22,424 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_tags.csv
+2025-05-26 11:12:22,424 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_tags.csv
+2025-05-26 11:12:22,424 - tableau_logger - INFO - Processing table workbook_tags with 3 records
+2025-05-26 11:12:22,426 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbook_tags.csv
+2025-05-26 11:12:22,426 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbook_tags.csv
+2025-05-26 11:12:22,426 - tableau_logger - INFO - Successfully exported all tables to CSV. Exported files: ['users', 'workbooks', 'views', 'datasources', 'workbook_datasources', 'connections', 'datasource_connections', 'tags', 'workbook_tags']
+2025-05-26 11:12:39,443 - tableau_logger - INFO - Logger initialized with file logging only
+2025-05-26 11:12:39,891 - tableau_logger - INFO - Starting data transformation
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 2 records for table users
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 2 records for table workbooks
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 3 records for table views
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 3 records for table datasources
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 2 records for table connections
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 3 records for table tags
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 3 records for table workbook_datasources
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 2 records for table datasource_connections
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 3 records for table workbook_tags
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Successfully transformed all data
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Starting CSV export
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Input data contains tables: ['users', 'workbooks', 'views', 'datasources', 'connections', 'tags', 'workbook_datasources', 'datasource_connections', 'workbook_tags']
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Starting data transformation. Input tables: ['users', 'workbooks', 'views', 'datasources', 'connections', 'tags', 'workbook_datasources', 'datasource_connections', 'workbook_tags']
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 2 users
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 2 workbooks
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 3 views
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 3 datasources
+2025-05-26 11:12:39,892 - tableau_logger - INFO - Transformed 3 workbook_datasources relations
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Transformed 2 connections
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Transformed 2 datasource_connections relations
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Transformed 3 tags
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Transformed 3 workbook_tags relations
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Final transformed data summary:
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Table users: 2 records
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Table workbooks: 2 records
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Table views: 3 records
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Table datasources: 3 records
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Table workbook_datasources: 3 records
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Table connections: 2 records
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Table datasource_connections: 2 records
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Table tags: 3 records
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Table workbook_tags: 3 records
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Transformed data contains tables: ['users', 'workbooks', 'views', 'datasources', 'workbook_datasources', 'connections', 'datasource_connections', 'tags', 'workbook_tags']
+2025-05-26 11:12:39,893 - tableau_logger - INFO - Processing table users with 2 records
+2025-05-26 11:12:39,898 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_users.csv
+2025-05-26 11:12:39,899 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_users.csv
+2025-05-26 11:12:39,899 - tableau_logger - INFO - Processing table workbooks with 2 records
+2025-05-26 11:12:39,902 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbooks.csv
+2025-05-26 11:12:39,902 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbooks.csv
+2025-05-26 11:12:39,902 - tableau_logger - INFO - Processing table views with 3 records
+2025-05-26 11:12:39,904 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_views.csv
+2025-05-26 11:12:39,904 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_views.csv
+2025-05-26 11:12:39,905 - tableau_logger - INFO - Processing table datasources with 3 records
+2025-05-26 11:12:39,907 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_datasources.csv
+2025-05-26 11:12:39,907 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_datasources.csv
+2025-05-26 11:12:39,907 - tableau_logger - INFO - Processing table workbook_datasources with 3 records
+2025-05-26 11:12:39,908 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbook_datasources.csv
+2025-05-26 11:12:39,908 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbook_datasources.csv
+2025-05-26 11:12:39,908 - tableau_logger - INFO - Processing table connections with 2 records
+2025-05-26 11:12:39,910 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_connections.csv
+2025-05-26 11:12:39,910 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_connections.csv
+2025-05-26 11:12:39,910 - tableau_logger - INFO - Processing table datasource_connections with 2 records
+2025-05-26 11:12:39,912 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_datasource_connections.csv
+2025-05-26 11:12:39,912 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_datasource_connections.csv
+2025-05-26 11:12:39,912 - tableau_logger - INFO - Processing table tags with 3 records
+2025-05-26 11:12:39,913 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_tags.csv
+2025-05-26 11:12:39,913 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_tags.csv
+2025-05-26 11:12:39,913 - tableau_logger - INFO - Processing table workbook_tags with 3 records
+2025-05-26 11:12:39,915 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbook_tags.csv
+2025-05-26 11:12:39,915 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\src\csv_export\data\csv_exports\tableau_workbook_tags.csv
+2025-05-26 11:12:39,915 - tableau_logger - INFO - Successfully exported all tables to CSV. Exported files: ['users', 'workbooks', 'views', 'datasources', 'workbook_datasources', 'connections', 'datasource_connections', 'tags', 'workbook_tags']
+2025-05-26 11:13:08,883 - tableau_logger - INFO - Logger initialized with file logging only
+2025-05-26 11:13:09,327 - tableau_logger - INFO - Starting data transformation
+2025-05-26 11:13:09,327 - tableau_logger - INFO - Transformed 2 records for table users
+2025-05-26 11:13:09,327 - tableau_logger - INFO - Transformed 2 records for table workbooks
+2025-05-26 11:13:09,327 - tableau_logger - INFO - Transformed 3 records for table views
+2025-05-26 11:13:09,327 - tableau_logger - INFO - Transformed 3 records for table datasources
+2025-05-26 11:13:09,327 - tableau_logger - INFO - Transformed 2 records for table connections
+2025-05-26 11:13:09,327 - tableau_logger - INFO - Transformed 3 records for table tags
+2025-05-26 11:13:09,327 - tableau_logger - INFO - Transformed 3 records for table workbook_datasources
+2025-05-26 11:13:09,327 - tableau_logger - INFO - Transformed 2 records for table datasource_connections
+2025-05-26 11:13:09,327 - tableau_logger - INFO - Transformed 3 records for table workbook_tags
+2025-05-26 11:13:09,327 - tableau_logger - INFO - Successfully transformed all data
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Starting CSV export
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Input data contains tables: ['users', 'workbooks', 'views', 'datasources', 'connections', 'tags', 'workbook_datasources', 'datasource_connections', 'workbook_tags']
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Starting data transformation. Input tables: ['users', 'workbooks', 'views', 'datasources', 'connections', 'tags', 'workbook_datasources', 'datasource_connections', 'workbook_tags']
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Transformed 2 users
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Transformed 2 workbooks
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Transformed 3 views
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Transformed 3 datasources
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Transformed 3 workbook_datasources relations
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Transformed 2 connections
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Transformed 2 datasource_connections relations
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Transformed 3 tags
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Transformed 3 workbook_tags relations
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Final transformed data summary:
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Table users: 2 records
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Table workbooks: 2 records
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Table views: 3 records
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Table datasources: 3 records
+2025-05-26 11:13:09,328 - tableau_logger - INFO - Table workbook_datasources: 3 records
+2025-05-26 11:13:09,329 - tableau_logger - INFO - Table connections: 2 records
+2025-05-26 11:13:09,329 - tableau_logger - INFO - Table datasource_connections: 2 records
+2025-05-26 11:13:09,329 - tableau_logger - INFO - Table tags: 3 records
+2025-05-26 11:13:09,329 - tableau_logger - INFO - Table workbook_tags: 3 records
+2025-05-26 11:13:09,329 - tableau_logger - INFO - Transformed data contains tables: ['users', 'workbooks', 'views', 'datasources', 'workbook_datasources', 'connections', 'datasource_connections', 'tags', 'workbook_tags']
+2025-05-26 11:13:09,329 - tableau_logger - INFO - Processing table users with 2 records
+2025-05-26 11:13:09,334 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_users.csv
+2025-05-26 11:13:09,334 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_users.csv
+2025-05-26 11:13:09,334 - tableau_logger - INFO - Processing table workbooks with 2 records
+2025-05-26 11:13:09,336 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_workbooks.csv
+2025-05-26 11:13:09,337 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_workbooks.csv
+2025-05-26 11:13:09,337 - tableau_logger - INFO - Processing table views with 3 records
+2025-05-26 11:13:09,340 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_views.csv
+2025-05-26 11:13:09,341 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_views.csv
+2025-05-26 11:13:09,341 - tableau_logger - INFO - Processing table datasources with 3 records
+2025-05-26 11:13:09,343 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_datasources.csv
+2025-05-26 11:13:09,344 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_datasources.csv
+2025-05-26 11:13:09,344 - tableau_logger - INFO - Processing table workbook_datasources with 3 records
+2025-05-26 11:13:09,345 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_workbook_datasources.csv
+2025-05-26 11:13:09,345 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_workbook_datasources.csv
+2025-05-26 11:13:09,345 - tableau_logger - INFO - Processing table connections with 2 records
+2025-05-26 11:13:09,358 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_connections.csv
+2025-05-26 11:13:09,359 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_connections.csv
+2025-05-26 11:13:09,359 - tableau_logger - INFO - Processing table datasource_connections with 2 records
+2025-05-26 11:13:09,360 - tableau_logger - INFO - Exported 2 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_datasource_connections.csv
+2025-05-26 11:13:09,360 - tableau_logger - INFO - Successfully exported 2 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_datasource_connections.csv
+2025-05-26 11:13:09,360 - tableau_logger - INFO - Processing table tags with 3 records
+2025-05-26 11:13:09,362 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_tags.csv
+2025-05-26 11:13:09,362 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_tags.csv
+2025-05-26 11:13:09,362 - tableau_logger - INFO - Processing table workbook_tags with 3 records
+2025-05-26 11:13:09,363 - tableau_logger - INFO - Exported 3 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_workbook_tags.csv
+2025-05-26 11:13:09,364 - tableau_logger - INFO - Successfully exported 3 records to d:\Tableau_application\src\new_code\data\csv_exports\tableau_workbook_tags.csv
+2025-05-26 11:13:09,364 - tableau_logger - INFO - Successfully exported all tables to CSV. Exported files: ['users', 'workbooks', 'views', 'datasources', 'workbook_datasources', 'connections', 'datasource_connections', 'tags', 'workbook_tags']

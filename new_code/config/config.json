@@ -1,11 +1,11 @@
 {
-    "logger": {
-      "logger_name": "my_custom_logger",
-      "log_level": "DEBUG",
-      "log_format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-      "log_file_path": "logs/app.log",
-      "console_log_level": "DEBUG",
-      "file_log_level": "ERROR",
-      "logging_enabled": true
-    }
+  "logger": {
+    "logger_name": "tableau_logger",
+    "log_level": "DEBUG",
+    "log_format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "log_dir": "logs",
+    "log_file_name": "app.log",
+    "file_log_level": "DEBUG",
+    "logging_enabled": true
   }
+}

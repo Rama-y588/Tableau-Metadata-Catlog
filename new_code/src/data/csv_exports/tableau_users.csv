@@ -1,3 +1,3 @@
 id,name,username,email,created_at,updated_at
-user_001,Alice Smith,alice.smith,alice.smith@example.com,2025-05-26 01:49:45.080003,2025-05-26 01:49:45.080005
-user_002,Bob Johnson,bob.johnson,bob.johnson@example.com,2025-05-26 01:49:45.080006,2025-05-26 01:49:45.080007
+user_002,Bob Johnson,bob.johnson,bob.johnson@example.com,2025-05-26 11:11:22.956192,2025-05-26 11:11:22.956193
+user_001,Alice Smith,alice.smith,alice.smith@example.com,2025-05-26 11:11:22.956195,2025-05-26 11:11:22.956195

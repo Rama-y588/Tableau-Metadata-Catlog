@@ -3,13 +3,13 @@ import logging.config
 from pathlib import Path
 import json
 from typing import Optional, Dict, Any
-from dotenv import load_dotenv
+from logging.handlers import RotatingFileHandler
 import os
 
 class TableauLogger:
     """
-    Custom logger for Tableau application using configuration from logger_config.json.
-    Supports dynamic enabling/disabling and runtime config reloading.
+    Custom logger for Tableau application using configuration from config.json.
+    Supports both file and console logging with different log levels.
     """
 
     def __init__(self, config_path: Optional[Path] = None):
@@ -18,10 +18,10 @@ class TableauLogger:
         If config_path is not provided, uses default path.
         """
         if config_path is None:
-            config_path = root_dir / 'config' / 'logger_config.json'
+            config_path = Path(__file__).parent.parent.parent / 'config' / 'config.json'
         self.config_path = config_path
         self.config = self._load_config()
-        self._setup_logging()
+        self.logger = self._setup_logger()
 
     def _load_config(self) -> Dict[str, Any]:
         """
@@ -31,61 +31,64 @@ class TableauLogger:
         try:
             with open(self.config_path, 'r') as f:
                 config = json.load(f)
-            return config
+            return config.get('logger', {})
         except Exception as e:
-            log = logging.getLogger("fallback")
-            log.error(f"Error loading logger configuration: {str(e)}")
+            print(f"Error loading logger configuration: {str(e)}")
             # Return a minimal config to prevent crash
             return {
-                "version": 1,
-                "disable_existing_loggers": False,
-                "logging_enabled": False,
-                "handlers": {},
-                "loggers": {}
+                "logger_name": "tableau_logger",
+                "log_level": "INFO",
+                "log_format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+                "log_dir": "logs",
+                "log_file_name": "app.log",
+                "console_log_level": "INFO",
+                "file_log_level": "ERROR",
+                "logging_enabled": False
             }
 
-    def _setup_logging(self) -> None:
+    def _setup_logger(self) -> logging.Logger:
         """
-        Setup logging using the configuration file.
-        If logging is disabled, disables the logger.
+        Setup and configure the logger with file handler only.
         """
-        try:
-            if not self.config.get('logging_enabled', False):
-                self.logger = logging.getLogger('tableau')
-                self.logger.disabled = True
-                return
-
-            # Ensure logs directory exists
-            log_dir = Path(__file__).resolve().parent.parent.parent / 'logs'
+        # Create logger
+        logger = logging.getLogger(self.config.get('logger_name', 'tableau_logger'))
+        logger.setLevel(self.config.get('log_level', 'INFO'))
+        
+        # Remove any existing handlers
+        logger.handlers = []
+        
+        # Create formatter
+        formatter = logging.Formatter(self.config.get('log_format'))
+        
+        # Setup file handler if logging is enabled
+        if self.config.get('logging_enabled', False):
+            # Create logs directory
+            log_dir = Path(__file__).parent.parent.parent / self.config.get('log_dir', 'logs')
             log_dir.mkdir(parents=True, exist_ok=True)
-
-            # Update log file path for file handler if present
-            handlers = self.config.get('handlers', {})
-            if 'file' in handlers and 'filename' in handlers['file']:
-                handlers['file']['filename'] = str(log_dir / Path(handlers['file']['filename']).name)
-
-            # Configure logging
-            logging.config.dictConfig(self.config)
-
-            # Get logger and set enabled/disabled state
-            logger_name = next(iter(self.config.get('loggers', {'tableau': {}})))
-            self.logger = logging.getLogger(logger_name)
-            self.logger.disabled = not self.config.get('loggers', {}).get(logger_name, {}).get('enabled', True)
-
-            if not self.logger.disabled:
-                self.logger.info("Logger initialized with custom configuration")
-        except Exception as e:
-            log = logging.getLogger("fallback")
-            log.error(f"Error setting up logger: {str(e)}")
-            self.logger = logging.getLogger('tableau')
-            self.logger.disabled = True
+            
+            # Setup file handler with rotation
+            log_file = log_dir / self.config.get('log_file_name', 'app.log')
+            file_handler = RotatingFileHandler(
+                log_file,
+                maxBytes=10*1024*1024,  # 10MB
+                backupCount=5
+            )
+            file_handler.setLevel(self.config.get('file_log_level', 'ERROR'))
+            file_handler.setFormatter(formatter)
+            logger.addHandler(file_handler)
+            
+            logger.info("Logger initialized with file logging only")
+        else:
+            logger.disabled = True
+            
+        return logger
 
     def reload_config(self) -> None:
         """
         Reload the logging configuration from file and reinitialize the logger.
         """
         self.config = self._load_config()
-        self._setup_logging()
+        self.logger = self._setup_logger()
 
     def is_enabled(self) -> bool:
         """
@@ -99,7 +102,7 @@ class TableauLogger:
         """
         self.config['logging_enabled'] = True
         self._update_config()
-        self._setup_logging()
+        self.logger = self._setup_logger()
 
     def disable_logging(self) -> None:
         """
@@ -107,18 +110,25 @@ class TableauLogger:
         """
         self.config['logging_enabled'] = False
         self._update_config()
-        self._setup_logging()
+        self.logger = self._setup_logger()
 
     def _update_config(self) -> None:
         """
         Update the configuration file (JSON).
         """
         try:
+            # Read the entire config file
+            with open(self.config_path, 'r') as f:
+                full_config = json.load(f)
+            
+            # Update the logger section
+            full_config['logger'] = self.config
+            
+            # Write back the entire config
             with open(self.config_path, 'w') as f:
-                json.dump(self.config, f, indent=2)
+                json.dump(full_config, f, indent=2)
         except Exception as e:
-            log = logging.getLogger("fallback")
-            log.error(f"Error updating logger configuration: {str(e)}")
+            print(f"Error updating logger configuration: {str(e)}")
 
     def info(self, message: str) -> None:
         """Log info message if logging is enabled."""
@@ -145,48 +155,21 @@ class TableauLogger:
         if not self.logger.disabled:
             self.logger.critical(message)
 
-# ---------------------- Singleton Instance Setup ----------------------
-
-# Load environment variables from .env (three levels up)
-currentdir = Path(__file__).resolve()
-root_dir = currentdir.parent.parent.parent
-log = logging.getLogger("fallback")
-
-# Load .env from root_dir
-dotenv_path = root_dir / '.env'
-load_dotenv(dotenv_path=dotenv_path)
-
-# Determine config file path from environment or use default
-config_file_path_env = os.getenv('CONFIG_FILE_PATH')
-if config_file_path_env:
-    config_relative_path = Path(config_file_path_env)
-else:
-    log.warning("Warning: 'CONFIG_FILE_PATH' environment variable not found. Using default relative path 'config/logger_config.json'.")
-    config_relative_path = Path("config") / "logger_config.json"
-
-configfilepath = root_dir / config_relative_path
-
-# Create the logger instance
-app_logger = TableauLogger(config_path=configfilepath)
-
+# Create the singleton logger instance
+app_logger = TableauLogger()
 
 # Example usage:
-"""
-from src.utils.custom_logger import app_logger
-
-# Check if logging is enabled
-if app_logger.is_enabled():
-    app_logger.info("Logging is enabled")
-
-# Enable/disable logging
-app_logger.disable_logging()
-app_logger.enable_logging()
-
-# Reload configuration from file
-app_logger.reload_config()
-
-# Log messages (will only log if enabled)
-app_logger.info("This is an info message")
-app_logger.warning("This is a warning message")
-app_logger.error("This is an error message")
-"""
+if __name__ == "__main__":
+    # Test the logger
+    app_logger.info("Logger initialized")
+    app_logger.debug("This is a debug message")
+    app_logger.info("This is an info message")
+    app_logger.warning("This is a warning message")
+    app_logger.error("This is an error message")
+    
+    # Test enabling/disabling
+    app_logger.disable_logging()
+    app_logger.info("This won't be logged")
+    
+    app_logger.enable_logging()
+    app_logger.info("This will be logged again")

@@ -33,27 +33,35 @@ Table datasources {
   uri varchar [null]
   has_extracts boolean
   extract_last_refresh_time timestamp [null]
-  workbook_id varchar
   type varchar // 'upstream' or 'embedded'
   created_at timestamp
   updated_at timestamp
 }
 
-Table databases {
+Table workbook_datasources {
+  workbook_id varchar
+  datasource_id varchar
+
+  indexes {
+    (workbook_id, datasource_id) [pk]
+  }
+}
+
+Table connections {
   id varchar [pk]
   name varchar
   connection_type varchar
-  type varchar // for __typename
+  connects_to varchar // was 'type', now renamed for clarity
   created_at timestamp
   updated_at timestamp
 }
 
-Table datasource_databases {
+Table datasource_connections {
   datasource_id varchar
-  database_id varchar
+  connection_id varchar
 
   indexes {
-    (datasource_id, database_id) [pk]
+    (datasource_id, connection_id) [pk]
   }
 }
 
@@ -75,13 +83,9 @@ Table workbook_tags {
 
 Ref: workbooks.owner_id > users.id
 Ref: views.workbook_id > workbooks.id
-Ref: datasources.workbook_id > workbooks.id
-Ref: datasource_databases.datasource_id > datasources.id
-Ref: datasource_databases.database_id > databases.id
+Ref: workbook_datasources.workbook_id > workbooks.id
+Ref: workbook_datasources.datasource_id > datasources.id
+Ref: datasource_connections.datasource_id > datasources.id
+Ref: datasource_connections.connection_id > connections.id
 Ref: workbook_tags.workbook_id > workbooks.id
 Ref: workbook_tags.tag_id > tags.id
-
-// Indexes for better query performance - DBML does not have direct syntax for named indexes outside of table blocks like this.
-// These would typically be defined within the table definition using the `indexes` block if they are table-specific.
-// For multi-column indexes or specific index types, you might add comments or rely on the ORM/database specific migrations.
-// The primary keys defined in the table already create indexes.
