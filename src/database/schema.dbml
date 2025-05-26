@@ -1,0 +1,96 @@
+Tableau Projects {
+  id varchar [pk] 
+  name varchar
+}
+Table users {
+  id varchar [pk]
+  name varchar
+  username varchar [unique]
+  email varchar [unique]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table workbooks {
+  id varchar [pk]
+  name varchar
+  project_id varchar
+  uri varchar
+  owner_id varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table views {
+  id varchar [pk]
+  name varchar
+  workbook_id varchar
+  path varchar
+  created_at timestamp
+  updated_at timestamp
+  type varchar // for __typename
+}
+
+Table datasources {
+  id varchar [pk]
+  name varchar
+  uri varchar [null]
+  has_extracts boolean
+  extract_last_refresh_time timestamp [null]
+  type varchar // 'upstream' or 'embedded'
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table workbook_datasources {
+  workbook_id varchar
+  datasource_id varchar
+
+  indexes {
+    (workbook_id, datasource_id) [pk]
+  }
+}
+
+Table connections {
+  id varchar [pk]
+  name varchar
+  connection_type varchar
+  connects_to varchar // was 'type', now renamed for clarity
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table datasource_connections {
+  datasource_id varchar
+  connection_id varchar
+
+  indexes {
+    (datasource_id, connection_id) [pk]
+  }
+}
+
+Table tags {
+  id varchar [pk]
+  name varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table workbook_tags {
+  workbook_id varchar
+  tag_id varchar
+
+  indexes {
+    (workbook_id, tag_id) [pk]
+  }
+}
+
+Ref: workbooks.owner_id > users.id
+Ref: views.workbook_id > workbooks.id
+Ref: workbook_datasources.workbook_id > workbooks.id
+Ref: workbook_datasources.datasource_id > datasources.id
+Ref: datasource_connections.datasource_id > datasources.id
+Ref: datasource_connections.connection_id > connections.id
+Ref: workbook_tags.workbook_id > workbooks.id
+Ref: workbook_tags.tag_id > tags.id
+Ref: projects.id > workbooks.project_id

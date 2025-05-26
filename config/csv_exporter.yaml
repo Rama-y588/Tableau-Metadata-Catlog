@@ -1,0 +1,4 @@
+file_settings:
+  data_folder_path: "app\\data" # Or "C:/YourApp/data" on Windows, or use a relative path like "data"
+  temp_subfolder_name: "temp"
+  project_csv_filename: "tableau_project_list.csv"

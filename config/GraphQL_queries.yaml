@@ -1,0 +1,26 @@
+# Query 1: Fetch a list of all active users with their IDs and names
+get_projects_from_workbook:
+  query: |
+    query GetWorkbooksProjectData {
+    workbooks {
+        projectuid
+        projectname
+      }
+    }
+
+# Query 2: Retrieve a specific product by ID, including its name, price, and description
+get_product_details:
+  query: |
+    query GetProductById($productId: ID!) {
+      product(id: $productId) {
+        id
+        name
+        price
+        description
+        category {
+          name
+        }
+      }
+    }
+  variables:
+    productId: "12345" # Example variable value - replace with actual ID

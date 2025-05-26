@@ -1,0 +1,38 @@
+# Server Profiles Configuration
+
+# Default Profile Selection
+settings:
+  default_profile: development  # Options: default, development, staging
+
+# Default Production Server
+default:
+  url: https://default-tableau-server.com
+  site_name: default_site
+  api_version: 3.19
+  description: Default Production Server
+
+# Development Server
+development:
+  url: https://dev-tableau-server.com
+  site_name: dev_site
+  api_version: 3.19
+  description: Development Server
+
+# Staging Server
+staging:
+  url: https://staging-tableau-server.com
+  site_name: staging_site
+  api_version: 3.19
+  description: Staging Server
+
+# Logging Configuration
+logging:
+  level: INFO
+  file: tableau_server.log
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+# Connection Settings
+connection:
+  timeout: 30
+  retry_attempts: 3
+  retry_delay: 5 

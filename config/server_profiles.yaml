@@ -1,0 +1,35 @@
+# config/server_profiles.yaml
+
+# Global connection settings (optional)
+connection:
+  retry_attempts: 3 # Number of times to retry a failed connection
+  retry_delay: 5    # Delay in seconds between retry attempts
+
+# Define your Tableau Server profiles
+# Each key represents a unique profile name
+
+default:
+  url: "https://tableau.dev.yourcompany.com"
+  site_name: "Development"
+  api_version: "3.19"
+  description: "Connection profile for the Development Tableau Server environment."
+
+development:
+  url: "https://tableau.dev.yourcompany.com"
+  site_name: "Development"
+  api_version: "3.19"
+  description: "Connection profile for the Development Tableau Server environment."
+
+production:
+  url: "https://tableau.prod.yourcompany.com"
+  site_name: "Production"
+  api_version: "3.19"
+  description: "Connection profile for the Production Tableau Server environment."
+
+
+qa_server:
+  url: "https://tableau.qa.yourcompany.com"
+  site_name: "QA"
+  api_version: "3.18"
+  description: "Connection profile for the Quality Assurance Tableau Server."
+
