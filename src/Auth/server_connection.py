@@ -44,6 +44,7 @@ def _load_config_and_env() -> None:
     }
 
     for name, profile_data in config_data.items():
+
         
         if name == 'connection':
             continue
