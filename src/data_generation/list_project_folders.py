@@ -4,13 +4,17 @@ from typing import List, Dict, Any, Optional
 from src.utils.logger import app_logger as logger
 from src.generate_csv.generate_projects_csv import generate_project_csv_from_config
 from src.config.config_loader import get_project_file_path
-from grahql_query_generation_for_projects import   generate_graphql_queries
-import yaml
+from src.data_generation.grahql_query_generation_for_projects import generate_graphql_queries
 from src.querying.graphql_query_loader import get_query_by_name
+import yaml
 
+# Generate the CSV that stores project IDs and names
 generate_project_csv_from_config()
+
+# Resolve root folder of the repo (assumes this file is nested at least 2 levels deep)
 current_file = Path(__file__).resolve()
-root_folder =  current_file.parents[2]
+root_folder = current_file.parents[2]
+
 def load_project_mappings(csv_path: Path) -> Dict[str, str]:
     """
     Loads project_id to project_name mapping from the CSV.
@@ -25,10 +29,9 @@ def load_project_mappings(csv_path: Path) -> Dict[str, str]:
                 mappings[project_id] = project_name
     return mappings
 
-
 if __name__ == "__main__":
-    current_file = Path(__file__).resolve().name
-    logger.info(f"Running script: {current_file}")
+    script_name = Path(__file__).resolve().name
+    logger.info(f"Running script: {script_name}")
 
     try:
         # Step 1: Generate CSV
@@ -36,20 +39,23 @@ if __name__ == "__main__":
         logger.info("CSV generated successfully.")
 
         # Step 2: Load the generated CSV
-        csv_path = root_folder / "app" / "data" / "temp"  / "tableau_projects_list.csv"
+        csv_path = root_folder / "app" / "data" / "temp" / "tableau_projects_list.csv"
         logger.info(f"Loading project mappings from: {csv_path}")
         project_mappings = load_project_mappings(csv_path)
-        for i in project_mappings:
-            generate_graphql_queries()
 
-        # Step 3: You provide the string here
-        test_input = "This belongs to project_id=12345 which needs update."
-        template_query =   get_query_by_name(query_name= "master_query")
-        updated_string = get_query_by_name(project_mappings ,query_name= template_query)
-        print(updated_string)
+        # Step 3: Load GraphQL query template
+        template_query = get_query_by_name(query_name="master_query")
 
-        # Step 4: Print the updated string
-        print("Updated string:", updated_string)
+        # Step 4: Generate GraphQL queries
+        graphql_queries = generate_graphql_queries(mapping=project_mappings, query_template=template_query)
+
+        # Step 5: Print each generated query
+        for item in graphql_queries:
+            print(f"Project ID: {item['project_id']}")
+            print(f"Project Name: {item['project_name']}")
+            print("Generated Query:")
+            print(item['query'])
+            print("=" * 80)
 
     except Exception as e:
-        logger.error(f"Error in {current_file}: {e}")
+        logger.error(f"Error in {script_name}: {e}")
