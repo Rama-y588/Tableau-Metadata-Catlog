@@ -12,9 +12,10 @@ get_projects_from_workbook:
 master_query:
   query: |
     {
-      workbooks {
+      workbooks(filter : {projectName : project_name_val , projectuid : project_id_val }) {
         id
         name
+        projectuid
         projectName
         uri
         createdAt
