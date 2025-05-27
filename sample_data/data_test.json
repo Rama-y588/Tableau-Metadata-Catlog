@@ -6,6 +6,8 @@
           "name": "Sales Dashboard Q1",
           "projectName": "Marketing Analytics",
           "uri": "site/18842/workbook/123",
+          "createdAt": "2024-01-15T10:00:00Z",
+          "updatedAt": "2024-01-15T10:00:00Z",
           "owner": {
             "id": "user_001",
             "name": "Alice Smith",
@@ -16,7 +18,7 @@
             {
               "id": "view_a1",
               "name": "Overview",
-              "__typename": "View",
+              "__typename": "Dashboard",
               "createdAt": "2024-01-15T10:00:00Z",
               "updatedAt": "2024-01-15T10:00:00Z",
               "path": "/views/overview"
@@ -74,6 +76,8 @@
           "name": "HR Employee Demographics",
           "projectName": "Human Resources",
           "uri": "site/18842/workbook/456",
+          "createdAt": "2024-01-15T10:00:00Z",
+          "updatedAt": "2024-01-15T10:00:00Z",
           "owner": {
             "id": "user_002",
             "name": "Bob Johnson",

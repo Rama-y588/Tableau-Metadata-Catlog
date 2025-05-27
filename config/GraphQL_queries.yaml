@@ -1,26 +1,69 @@
 # Query 1: Fetch a list of all active users with their IDs and names
 get_projects_from_workbook:
   query: |
-    query GetWorkbooksProjectData {
-    workbooks {
+    {
+      workbooks {
         projectuid
         projectname
       }
     }
 
-# Query 2: Retrieve a specific product by ID, including its name, price, and description
-get_product_details:
+# Query 2: Retrieve detailed information about workbooks, including owner, views, and data sources.
+master_query:
   query: |
-    query GetProductById($productId: ID!) {
-      product(id: $productId) {
+    {
+      workbooks {
         id
         name
-        price
-        description
-        category {
+        projectName
+        uri
+        createdAt
+        updatedAt
+        owner {
+          id
+          name
+          username
+          email
+          createdAt
+          updatedAt
+        }
+        views {
+          id
+          name
+          __typename
+          createdAt
+          updatedAt
+          path
+        }
+        upstreamDatasources {
+          id
+          name
+          uri
+          hasExtracts
+          extractLastRefreshTime
+          upstreamDatabases {
+            name
+            __typename
+            connectionType
+          }
+        }
+        embeddedDatasources {
+          id
+          name
+          hasExtracts
+          extractLastRefreshTime
+          upstreamDatabases {
+            name
+            __typename
+            connectionType
+          }
+        }
+        embeddedDatasourcesConnection {
+          totalCount
+        }
+        tags {
+          id
           name
         }
       }
     }
-  variables:
-    productId: "12345" # Example variable value - replace with actual ID

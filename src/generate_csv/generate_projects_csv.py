@@ -13,7 +13,6 @@ current_file_path = Path(__file__).resolve()
 # Based on your print output, 'D:\Tableau_application\src\new_code' is your desired project root.
 # If your script is directly in 'D:\Tableau_application\src\new_code', then .parent is correct.
 project_root = current_file_path.parent.parent.parent # This makes D:\Tableau_application\src\new_code the project root
-
 # Define the absolute path to the configuration file
 CONFIG_FILE_PATH = project_root / "config" / "csv_exporter.yaml"
 
@@ -57,7 +56,7 @@ def get_unique_workbook_projects() -> list[dict]:
     return processed_data
 
 # --- Configuration Loading Function ---
-def load_config(config_path: Path) -> dict | None:
+def load_YAML_config(config_path: Path) -> dict | None:
     """
     Loads configuration settings from a YAML file.
 
@@ -93,7 +92,7 @@ def generate_project_csv_from_config():
     """
     logger.info("Starting CSV generation process.")
 
-    config = load_config(CONFIG_FILE_PATH)
+    config = load_YAML_config(CONFIG_FILE_PATH)
     if not config:
         logger.error("Failed to load configuration. Aborting CSV generation.")
         return
@@ -117,11 +116,7 @@ def generate_project_csv_from_config():
     
     # Always join relative paths to the project_root
     output_directory = project_root / Path(data_folder_path_str) / temp_subfolder_name
-    print("output_directory:",output_directory)
-    print("project_root:",project_root)
-    print("data_base_path:",data_folder_path_str) 
-    print("temp_subfolder_name:",temp_subfolder_name)
-    print("project_csv_filename:",project_csv_filename)
+    
         
     csv_filepath = output_directory / project_csv_filename
 

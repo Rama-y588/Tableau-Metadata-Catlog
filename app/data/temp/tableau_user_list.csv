@@ -1,0 +1,3 @@
+user_id,user_name,user_username,user_email,user_created_at,user_updated_at
+user_001,Alice Smith,alice.smith,alice.smith@example.com,,
+user_002,Bob Johnson,bob.johnson,bob.johnson@example.com,,

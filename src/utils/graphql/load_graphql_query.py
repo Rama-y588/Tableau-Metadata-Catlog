@@ -10,7 +10,7 @@ from src.utils.logger import app_logger as logger
 # --- Module Constants ---
 current_file = Path(__file__).resolve()
 # This navigates from 'graphql_data_fetcher.py' -> 'new_code' -> 'src' -> 'Tableau_application'
-root_folder = current_file.parent.parent.parent
+root_folder = current_file.parents[3]
 GRAPHQL_QUERIES_CONFIG_PATH = root_folder / 'config' / 'GraphQL_queries.yaml'
 
 def load_graphql_query(query_name: str) -> str:

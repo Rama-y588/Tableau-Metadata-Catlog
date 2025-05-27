@@ -1,0 +1,4 @@
+Datasource ID,Datasource Name,Resource URI,Has Extracts,Last Extract Refresh Time,Datasource Type,Creation Date,Last Modified Date
+ds_up_x1,CRM Data,https://example.com/datasources/crm_data,true,2024-05-24T23:00:00+00:00,upstream,2025-05-27T07:14:14.665126,2025-05-27T07:14:14.665127
+ds_emb_y2,Excel Sales Forecast,,false,null,embedded,2025-05-27T07:14:14.665131,2025-05-27T07:14:14.665131
+ds_up_z3,HRIS Database,jdbc:sqlserver://hrdb.example.com,true,2024-05-25T01:00:00+00:00,upstream,2025-05-27T07:14:14.665139,2025-05-27T07:14:14.665140
