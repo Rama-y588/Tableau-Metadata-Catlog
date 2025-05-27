@@ -44,6 +44,7 @@ def _load_config_and_env() -> None:
     }
 
     for name, profile_data in config_data.items():
+        
         if name == 'connection':
             continue
         if not isinstance(profile_data, dict):
@@ -151,7 +152,7 @@ def disconnect_tableau_server(server: TSC.Server) -> None:
     except Exception as e:
         logger.error(f"Error during sign out: {e}")
 
-        
+
 if __name__ == "__main__":
     logger.info(f"Running test in file: {current_file.name}")
 
