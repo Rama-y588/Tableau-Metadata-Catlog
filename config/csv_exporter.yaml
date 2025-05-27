@@ -10,3 +10,4 @@ file_settings:
   connections_csv_filename : "tableau_connections_list.csv"
   datasource_connections_csv_filename: "tableau_datasource_connections_list.csv"
   tags_csv_filename : "tableau_tags_list.csv"
+  metadata_json_filename : "metadata.json"

@@ -7,6 +7,7 @@ from src.config.config_loader import get_project_file_path
 from src.data_generation.grahql_query_generation_for_projects import generate_graphql_queries
 from src.querying.graphql_query_loader import get_query_by_name
 import yaml
+from  src.querying.metadata_querying import save_metadata_from_query
 
 # Generate the CSV that stores project IDs and names
 generate_project_csv_from_config()
@@ -56,6 +57,9 @@ if __name__ == "__main__":
             print("Generated Query:")
             print(item['query'])
             print("=" * 80)
+            save_metadata_from_query(query= item["query"])
+            #sequrece of operations here are need to be writtem 
+        
 
     except Exception as e:
         logger.error(f"Error in {script_name}: {e}")
