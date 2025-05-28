@@ -1,4 +1,7 @@
-Datasource ID,Datasource Name,Resource URI,Has Extracts,Last Extract Refresh Time,Datasource Type,Creation Date,Last Modified Date
-ds_up_x1,CRM Data,https://example.com/datasources/crm_data,true,2024-05-24T23:00:00+00:00,upstream,2025-05-27T07:14:14.665126,2025-05-27T07:14:14.665127
-ds_emb_y2,Excel Sales Forecast,,false,null,embedded,2025-05-27T07:14:14.665131,2025-05-27T07:14:14.665131
-ds_up_z3,HRIS Database,jdbc:sqlserver://hrdb.example.com,true,2024-05-25T01:00:00+00:00,upstream,2025-05-27T07:14:14.665139,2025-05-27T07:14:14.665140
+datasource_id,datasource_name,workbook_id,path,type,has_extracts,extract_last_refresh_time,created_at,updated_at
+ds_up_x1,CRM Data,123,,upstream,True,2024-05-24 23:00:00+00:00,2025-05-28 10:54:21.447384,2025-05-28 10:54:21.447385
+ds_emb_y2,Excel Sales Forecast,123,,embedded,False,,2025-05-28 10:54:21.447389,2025-05-28 10:54:21.447389
+ds_up_z3,HRIS Database,456,,upstream,True,2024-05-25 01:00:00+00:00,2025-05-28 10:54:21.447402,2025-05-28 10:54:21.447403
+ds_up_x1,CRM Data,,upstream,True,2024-05-24 23:00:00+00:00,2025-05-28 10:57:34.365604,2025-05-28 10:57:34.365605
+ds_emb_y2,Excel Sales Forecast,,embedded,False,,2025-05-28 10:57:34.365608,2025-05-28 10:57:34.365608
+ds_up_z3,HRIS Database,,upstream,True,2024-05-25 01:00:00+00:00,2025-05-28 10:57:34.365614,2025-05-28 10:57:34.365614

@@ -1,104 +1,130 @@
+import json
+import logging
 from datetime import datetime
+from pathlib import Path
 from typing import List, Dict, Any, Optional
+
 from src.utils.logger import app_logger as logger
 
-def parse_datetime(date_str: Optional[str]) -> Optional[datetime]:
-    """
-    Parse ISO 8601 date string into a datetime object.
+# --- Define root folder for standalone execution ---
+current_file = Path(__file__).resolve()
+root_folder = current_file.parents[2]
 
-    Args:
-        date_str (Optional[str]): Date string in ISO 8601 format.
+# Define module name for logging using current file name
+MODULE_NAME = current_file.name  # This will be 'list_datasources.py'
 
-    Returns:
-        Optional[datetime]: Parsed datetime object or None if invalid.
+def _parse_datetime(dt_string: Optional[str]) -> Optional[datetime]:
     """
-    if not date_str:
-        return None
-    try:
-        return datetime.fromisoformat(date_str.replace("Z", "+00:00"))
-    except ValueError as e:
-        logger.warning(f"Invalid datetime format: {date_str} - {e}")
-        return None
+    Parses ISO datetime strings with support for 'Z' (UTC).
+    Returns None if parsing fails.
+    """
+    if dt_string:
+        try:
+            return datetime.fromisoformat(dt_string.replace('Z', '+00:00'))
+        except ValueError:
+            logger.error(f"[{MODULE_NAME}] Invalid datetime format: '{dt_string}'")
+    return None
 
 def get_datasources(raw_data: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
-    Extract and transform datasource information from Tableau workbook data.
-
-    Processes both upstream and embedded datasources and returns a unified list
-    of datasource metadata including their role in the data pipeline.
+    Extracts datasource information from Tableau raw workbook JSON.
 
     Args:
-        raw_data (Dict[str, Any]): Raw JSON object containing Tableau workbook data.
+        raw_data (Dict[str, Any]): JSON-like dictionary containing 'data' > 'workbooks'.
 
     Returns:
-        List[Dict[str, Any]]: A list of datasource metadata dictionaries.
+        List[Dict[str, Any]]: List of datasources with metadata.
+
+    Raises:
+        ValueError: If input structure is malformed.
+        Exception: For unexpected runtime errors.
     """
+    logger.info(f"[{MODULE_NAME}] Starting datasources extraction process")
     datasources: List[Dict[str, Any]] = []
 
     try:
-        workbooks = raw_data.get('data', {}).get('workbooks', [])
-        logger.info(f"Processing {len(workbooks)} workbook(s)...")
+        data_root = raw_data.get('data', {})
+        workbooks = data_root.get('workbooks', [])
 
-        for wb_index, workbook in enumerate(workbooks):
-            logger.debug(f"Processing workbook {wb_index + 1}: {workbook.get('name', 'Unnamed')}")
+        if not isinstance(workbooks, list):
+            raise ValueError("'workbooks' should be a list.")
 
+        logger.info(f"[{MODULE_NAME}] Processing {len(workbooks)} workbooks")
+        
+        for workbook in workbooks:
+            workbook_id = workbook.get('id')
+            logger.debug(f"[{MODULE_NAME}] Processing workbook ID: {workbook_id}")
+
+            # Process upstream datasources
             for ds in workbook.get('upstreamDatasources', []):
                 datasource_id = ds.get('id')
+                datasource_name = ds.get('name')
+                
                 datasources.append({
                     'id': datasource_id,
-                    'name': ds.get('name') or None,
-                    'uri': ds.get('uri') or None,
-                    'has_extracts': ds.get('hasExtracts', False),
-                    'extract_last_refresh_time': parse_datetime(ds.get('extractLastRefreshTime')),
+                    'name': datasource_name,
+                    'workbook_id': workbook_id,
+                    'path': ds.get('path', ''),
                     'type': 'upstream',
+                    'has_extracts': ds.get('hasExtracts', False),
+                    'extract_last_refresh_time': _parse_datetime(ds.get('extractLastRefreshTime')),
                     'created_at': datetime.now(),
                     'updated_at': datetime.now()
                 })
+                logger.debug(f"[{MODULE_NAME}] Found Upstream Datasource: '{datasource_name}'")
 
+            # Process embedded datasources
             for ds in workbook.get('embeddedDatasources', []):
                 datasource_id = ds.get('id')
+                datasource_name = ds.get('name')
+                
                 datasources.append({
                     'id': datasource_id,
-                    'name': ds.get('name') or None,
-                    'uri': None,
-                    'has_extracts': ds.get('hasExtracts', False),
-                    'extract_last_refresh_time': parse_datetime(ds.get('extractLastRefreshTime')),
+                    'name': datasource_name,
+                    'workbook_id': workbook_id,
+                    'path': ds.get('path', ''),
                     'type': 'embedded',
+                    'has_extracts': ds.get('hasExtracts', False),
+                    'extract_last_refresh_time': _parse_datetime(ds.get('extractLastRefreshTime')),
                     'created_at': datetime.now(),
-                    'updated_at': datetime.now(),
+                    'updated_at': datetime.now()
                 })
+                logger.debug(f"[{MODULE_NAME}] Found Embedded Datasource: '{datasource_name}'")
+
+        logger.info(f"[{MODULE_NAME}] Successfully extracted {len(datasources)} datasources")
+        return datasources
 
     except Exception as e:
-        logger.exception(f"Failed to extract datasources: {e}")
+        logger.error(f"[{MODULE_NAME}] Error extracting datasources: {str(e)}", exc_info=True)
+        if isinstance(e, (AttributeError, TypeError)):
+            raise ValueError("Malformed input: expected dictionary with nested 'data' > 'workbooks'.") from e
         raise
-
-    logger.info(f"Extracted {len(datasources)} datasource(s).")
-    return datasources
-
 
 # --- Testing ---
 if __name__ == "__main__":
-    import json
-    from pathlib import Path
-
-    logger.info("\n--- Extracting ONLY Datasources from Raw Data ---")
-
+    logger.info(f"[{MODULE_NAME}] Starting datasources module test")
+    
     try:
-        root_folder = Path(__file__).resolve().parent.parent.parent  # Adjust if necessary
         test_data_path = root_folder / "sample_data" / "data_test.json"
-
-        if not test_data_path.exists():
-            logger.error(f"Test data file not found at {test_data_path}")
-            exit(1)
-
+        logger.debug(f"[{MODULE_NAME}] Loading test data from: {test_data_path}")
+        
         with open(test_data_path, 'r') as f:
             raw_data = json.load(f)
 
-        datasources = get_datasources(raw_data)
-
-        for ds in datasources:
-            print(ds)
-
+        # Get datasources data
+        datasources_data = get_datasources(raw_data)
+        logger.info(f"[{MODULE_NAME}] Found {len(datasources_data)} datasources")
+        
+        # Log sample of datasources
+        for ds in datasources_data[:3]:
+            logger.info(f"[{MODULE_NAME}] Sample Datasource:")
+            logger.info(f"[{MODULE_NAME}]   ID: {ds['id']}")
+            logger.info(f"[{MODULE_NAME}]   Name: {ds['name']}")
+            logger.info(f"[{MODULE_NAME}]   Type: {ds['type']}")
+            logger.info(f"[{MODULE_NAME}]   Has Extracts: {ds['has_extracts']}")
+            logger.info(f"[{MODULE_NAME}]   Last Refresh: {ds['extract_last_refresh_time']}")
+            
     except Exception as e:
-        logger.exception(f"Error during test execution: {e}")
-
+        logger.error(f"[{MODULE_NAME}] Error during test execution: {str(e)}", exc_info=True)
+    finally:
+        logger.info(f"[{MODULE_NAME}] Datasources module test completed")
