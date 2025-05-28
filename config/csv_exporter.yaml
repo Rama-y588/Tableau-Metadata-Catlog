@@ -2,7 +2,7 @@ file_settings:
   data_folder_path: "app\\data" # Or "C:/YourApp/data" on Windows, or use a relative path like "data"
   temp_subfolder_name: "temp"
   project_csv_filename: "tableau_project_list.csv"
-  user_csv_filename : "tableau_user_list.csv"
+  users_csv_filename : "tableau_user_list.csv"
   workbook_csv_filename : "tableau_workbook_list.csv"
   views_csv_filename : "tableau_views_list.csv"
   workbooks_csv_filename : "tableau_workbooks_list.csv"

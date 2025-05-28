@@ -1,104 +1,137 @@
 from datetime import datetime
 from typing import List, Dict, Set, Tuple, Optional, Any
-import tableauserverclient as TSC
-from src.Auth.server_connection import get_tableau_server, disconnect_tableau_server
-from src.utils.logger import app_logger as logger
-from src.utils.graphql.load_graphql_query import load_graphql_query
-from src.utils.graphql.execute_graphql_query import execute_graphql_query
-import json
 from pathlib import Path
+import json
 
+from src.utils.logger import app_logger as logger
+
+# --- Module Constants ---
 current_file = Path(__file__).resolve()
 root_folder = current_file.parents[2]
+MODULE_NAME = current_file.name
 
-def get_unique_users(profile_name: Optional[str] = None) -> List[Dict[str, Optional[str]]]:
+class UserData:
+    """Data class to store user information"""
+    id: str
+    name: str
+    username: str
+    email: str
+
+    @classmethod
+    def from_dict(cls, data: Dict[str, Any]) -> 'UserData':
+        """Create UserData instance from dictionary"""
+        return cls(
+            id=str(data.get('id', '')),
+            name=str(data.get('name', '')),
+            username=str(data.get('username', '')),
+            email=str(data.get('email', ''))
+        )
+
+    def to_dict(self) -> Dict[str, str]:
+        """Convert UserData instance to dictionary"""
+        return {
+            'id': self.id,
+            'name': self.name,
+            'username': self.username,
+            'email': self.email
+        }
+
+def get_users(raw_data: Dict[str, Any]) -> List[Dict[str, str]]:
     """
-    Fetches unique user details (specifically, owners of workbooks) from the Tableau Server Metadata API.
+    Extracts user information from the provided raw JSON data.
+
+    Args:
+        raw_data (Dict[str, Any]): Dictionary containing user data.
+
+    Returns:
+        List[Dict[str, str]]: A list of dictionaries containing user information:
+            - id: User's unique identifier
+            - name: User's name
+            - username: User's username
+            - email: User's email
+
+    Raises:
+        Exception: For unexpected errors during parsing.
     """
-    query_name = "master_query"  # Assuming this query fetches workbook data including owner details
-    logger.info(f"Initiating fetch for unique user details using GraphQL query: '{query_name}'")
+    start_time = datetime.now()
+    logger.info(f"[{MODULE_NAME}] Starting user extraction process")
 
     try:
-        query = load_graphql_query(query_name)
-    except (FileNotFoundError, ValueError) as e:
-        logger.critical(f"Fatal error: Failed to load GraphQL query '{query_name}'. Details: {e}")
-        raise
+        users_list = []
+        all_workbooks_raw = raw_data.get('data', {}).get('workbooks', [])
+        
+        if not all_workbooks_raw:
+            logger.warning(f"[{MODULE_NAME}] No workbooks found in raw data")
+            return users_list
 
-    unique_users_set: Set[Tuple[Optional[str], Optional[str], Optional[str], Optional[str], Optional[str], Optional[str]]] = set()
-    server: Optional[TSC.Server] = None
+        # Use a set to track unique users by their ID
+        unique_users = set()
 
-    try:
-        # server = get_tableau_server(profile_name=profile_name)
-        logger.debug(f"Executing Tableau Metadata API query:\n{query}")
-        sample_data_path = root_folder / 'sample_data' / 'data_test.json'
-        with open(sample_data_path, 'r') as f:
-            resp = json.load(f)
-
-        # resp = execute_graphql_query(server, query)
-
-        if 'errors' in resp:
-            error_messages = [err.get('message', 'Unknown GraphQL error') for err in resp['errors']]
-            logger.error(f"GraphQL query execution failed with errors: {'; '.join(error_messages)}")
-            raise Exception(f"Tableau Metadata API GraphQL errors: {'; '.join(error_messages)}")
-
-        # Fix: Properly navigate the GraphQL response structure
-        workbooks_data = resp.get('data', {}).get('workbooks', {})
-
-        if not workbooks_data:
-            logger.info("No workbooks found or the Tableau Metadata API query returned no data.")
-            return []
-
-        for workbook in workbooks_data:
-            owner = workbook.get('owner')
+        for workbook_raw in all_workbooks_raw:
+            owner = workbook_raw.get('owner', {})
             if not owner:
-                workbook_name = workbook.get('name', 'Unnamed Workbook')
-                workbook_id = workbook.get('id', 'Unknown ID')
-                logger.warning(f"Workbook '{workbook_name}' (ID: {workbook_id}) has no owner. Skipping.")
+                workbook_name = workbook_raw.get('name', 'Unnamed Workbook')
+                workbook_id = workbook_raw.get('id', 'Unknown ID')
+                logger.warning(f"[{MODULE_NAME}] Workbook '{workbook_name}' (ID: {workbook_id}) has no owner. Skipping.")
                 continue
 
-            user_tuple = (
-                owner.get('id'),
-                owner.get('name'),
-                owner.get('username'),
-                owner.get('email'),
-                owner.get("createdAt"),
-                owner.get("updatedAt")
-            )
+            user_id = owner.get('id')
+            if not user_id or user_id in unique_users:
+                continue
 
-            # Only add if at least one identifying piece of information exists for the owner
-            if any(user_tuple[:4]):  # Check id, name, username, email for 'any' value
-                unique_users_set.add(user_tuple)
+            user_info = {
+                'id': str(owner.get('id', '')),
+                'name': str(owner.get('name', '')),
+                'username': str(owner.get('username', '')),
+                'email': str(owner.get('email', ''))
+            }
+
+            # Only add if at least one identifying field exists
+            if any([user_info['id'], user_info['name'], user_info['username'], user_info['email']]):
+                users_list.append(user_info)
+                unique_users.add(user_id)
+                logger.debug(f"[{MODULE_NAME}] Found user: {user_info['name']} (ID: {user_info['id']})")
             else:
-                workbook_name = workbook.get('name', 'Unnamed Workbook')
-                workbook_id = workbook.get('id', 'Unknown ID')
+                workbook_name = workbook_raw.get('name', 'Unnamed Workbook')
+                workbook_id = workbook_raw.get('id', 'Unknown ID')
                 logger.warning(
-                    f"Workbook '{workbook_name}' (ID: {workbook_id}) found with owner having all primary identifying fields missing. Skipping this owner entry."
+                    f"[{MODULE_NAME}] Workbook '{workbook_name}' (ID: {workbook_id}) found with owner having all primary identifying fields missing. Skipping."
                 )
 
-        logger.info(f"Successfully identified {len(unique_users_set)} unique user entries from workbooks.")
+        processing_time = (datetime.now() - start_time).total_seconds()
+        logger.info(f"[{MODULE_NAME}] Successfully processed {len(users_list)} unique users in {processing_time:.2f} seconds")
+        return users_list
 
-        # Convert the set of tuples back to a list of dictionaries.
-        result_list = [
-            {
-                'id': user[0] or "",
-                'name': user[1] or "",
-                'username': user[2] or "",
-                'email': user[3] or "",
-                'created_at': user[4] or "",
-                'updated_at': user[5] or ""
-            }
-            for user in unique_users_set
-        ]
-
-        return result_list
-
-    except ConnectionError as e:
-        logger.error(f"Failed to establish connection to Tableau Server. Details: {e}")
-        raise
     except Exception as e:
-        logger.error(f"An unexpected error occurred while fetching unique user details. Details: {e}", exc_info=True)
+        logger.error(f"[{MODULE_NAME}] An unexpected error occurred while fetching users: {str(e)}")
         raise
-    finally:
-        if server:
-            disconnect_tableau_server(server)
-            logger.debug(f"Successfully disconnected from Tableau Server profile: {profile_name if profile_name else 'default'}")
+
+def main() -> None:
+    """Main function for testing the module."""
+    logger.info(f"[{MODULE_NAME}] Starting script execution")
+    
+    try:
+        # Load sample data
+        sample_data_path = root_folder / 'sample_data' / 'data_test.json'
+        logger.info(f"[{MODULE_NAME}] Loading test data from: {sample_data_path}")
+        
+        with open(sample_data_path, 'r', encoding='utf-8') as f:
+            raw_data = json.load(f)
+
+        # Get users from raw data
+        users = get_users(raw_data=raw_data)
+        
+        # Print sample of users for verification
+        logger.info(f"[{MODULE_NAME}] Retrieved {len(users)} unique users")
+        for user in users[:3]:  # Print first 3 users
+            logger.info(f"[{MODULE_NAME}] Sample user: {user}")
+            
+    except FileNotFoundError:
+        logger.error(f"[{MODULE_NAME}] Test data file not found: {sample_data_path}")
+    except json.JSONDecodeError:
+        logger.error(f"[{MODULE_NAME}] Invalid JSON in test data file")
+    except Exception as e:
+        logger.error(f"[{MODULE_NAME}] Script execution failed: {str(e)}")
+
+if __name__ == "__main__":
+    main()
