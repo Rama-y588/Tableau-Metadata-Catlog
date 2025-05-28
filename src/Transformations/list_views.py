@@ -4,14 +4,30 @@ from datetime import datetime
 from pathlib import Path
 from typing import List, Dict, Any, Optional
 from urllib.parse import quote
+from functools import lru_cache
 from src.utils.logger import app_logger as logger
+from src.Auth import server_connection
 
 # --- Define root folder for standalone execution ---
 current_file = Path(__file__).resolve()
 root_folder = current_file.parents[2]
 
 # Define module name for logging
-MODULE_NAME = current_file.name
+MODULE_NAME = "list_views"
+
+@lru_cache(maxsize=1)
+def get_server_config() -> Dict[str, Any]:
+    """Get cached server configuration."""
+    try:
+        default_profile = server_connection._default_profile_name
+        config = server_connection._profiles.get(default_profile, {})
+        if not config:
+            logger.error(f"[{MODULE_NAME}] Server configuration not found")
+            raise ValueError("Server configuration is empty")
+        return config
+    except Exception as e:
+        logger.error(f"[{MODULE_NAME}] Failed to get server configuration: {str(e)}")
+        raise
 
 def _parse_datetime(dt_string: Optional[str]) -> Optional[datetime]:
     """
@@ -25,20 +41,22 @@ def _parse_datetime(dt_string: Optional[str]) -> Optional[datetime]:
             logger.error(f"[{MODULE_NAME}] Invalid datetime format: '{dt_string}'")
     return None
 
-def construct_view_url(view_path: str, site_name: str) -> str:
+def construct_view_url(view_path: str) -> str:
     """
-    Constructs a Tableau view URL using the view path and site name.
+    Constructs a Tableau view URL using the view path.
     
     Args:
         view_path (str): Path of the view
-        site_name (str): Name of the Tableau site
         
     Returns:
         str: Constructed view URL
     """
     try:
+        # Get server connection details
+        server_config = get_server_config()
+        
         # Construct the URL
-        view_url = f"https://{site_name}/#/views/{view_path}"
+        view_url = f"https://{server_config['url']}/#/site/{server_config["site_name"]}/views/{view_path}"
         
         logger.debug(f"[{MODULE_NAME}] Constructed view URL: {view_url}")
         return view_url
@@ -46,13 +64,12 @@ def construct_view_url(view_path: str, site_name: str) -> str:
         logger.error(f"[{MODULE_NAME}] Error constructing view URL: {str(e)}", exc_info=True)
         return ""
 
-def get_views(raw_data: Dict[str, Any], site_name: str) -> List[Dict[str, Any]]:
+def get_views(raw_data: Dict[str, Any]) -> List[Dict[str, Any]]:
     """
     Extracts only 'Dashboard' type views from Tableau raw workbook JSON.
 
     Args:
         raw_data (Dict[str, Any]): JSON-like dictionary containing 'data' > 'workbooks'.
-        site_name (str): Name of the Tableau site for URL construction
 
     Returns:
         List[Dict[str, Any]]: List of dashboard views with metadata.
@@ -82,7 +99,7 @@ def get_views(raw_data: Dict[str, Any], site_name: str) -> List[Dict[str, Any]]:
                 if view.get('__typename') == 'Dashboard':
                     view_name = view.get('name')
                     view_path = view.get('path', '')
-                    view_url = construct_view_url(view_path, site_name)
+                    view_url = construct_view_url(view_path)
                     
                     dashboard_views.append({
                         'id': view.get('id'),
@@ -117,17 +134,13 @@ if __name__ == "__main__":
         with open(test_data_path, 'r') as f:
             raw_data = json.load(f)
 
-        # Test site name
-        site_name = "tableau.example.com"  # Replace with your actual site name
-        logger.info(f"[{MODULE_NAME}] Using site name: {site_name}")
-
-        # Get dashboard views
-        dashboard_views = get_views(raw_data, site_name)
-        logger.info(f"[{MODULE_NAME}] Found {len(dashboard_views)} dashboard views")
+        # Get views data without site_name parameter
+        views_data = get_views(raw_data)
+        logger.info(f"[{MODULE_NAME}] Found {len(views_data)} views")
         
         # Log sample of views
-        for view in dashboard_views[:3]:
-            logger.info(f"[{MODULE_NAME}] Sample Dashboard:")
+        for view in views_data[:3]:
+            logger.info(f"[{MODULE_NAME}] Sample View:")
             logger.info(f"[{MODULE_NAME}]   ID: {view['id']}")
             logger.info(f"[{MODULE_NAME}]   Name: {view['name']}")
             logger.info(f"[{MODULE_NAME}]   Workbook: {view['workbook_name']}")

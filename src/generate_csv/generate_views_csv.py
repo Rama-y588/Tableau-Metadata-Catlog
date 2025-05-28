@@ -129,7 +129,7 @@ if __name__ == "__main__":
         raw_data = json.load(f)
 
     # Get views data using get_views
-    views_data = get_views(raw_data=raw_data, site_name="tableau.example.com")
+    views_data = get_views(raw_data=raw_data)
     
     # Generate CSV and get status
     status = generate_views_csv_from_config(views_data)
