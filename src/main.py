@@ -7,11 +7,13 @@ from src.config.config_loader import load_YAML_config
 from src.data_generation.grahql_query_generation_for_projects import generate_graphql_queries
 from src.querying.graphql_query_loader import get_query_by_name
 from src.querying.metadata_querying import save_metadata_from_query
+from src.data_generation.metadata_loader import load_metadata
+from src.Transformations.transform_all import transform_all
 
 # Load config file
 current_file = Path(__file__).resolve()
 root_folder = current_file.parents[3]
-CONFIG_FILE_PATH =root_folder / "config" / "csv_exporter.yaml"
+CONFIG_FILE_PATH = root_folder / "config" / "csv_exporter.yaml"
 
 # Utility function to load the project mappings from the CSV
 def load_project_mappings(csv_path: Path) -> List[Dict[str, Any]]:
@@ -63,17 +65,37 @@ def main():
         # Step 5: Generate GraphQL queries
         graphql_queries = generate_graphql_queries(mapping=project_mappings, query_template=template_query)
 
-        # Step 6: Print each generated query and save metadata
+        # Step 6: Process each query, save metadata, and transform
         for item in graphql_queries:
-            print(f"Project ID: {item['project_id']}")
-            print(f"Project Name: {item['project_name']}")
-            print("Generated Query:")
-            print(item['query'])
-            print("=" * 80)
+            project_id = item['project_id']
+            project_name = item['project_name']
+            
+            logger.info(f"Processing project: {project_name} (ID: {project_id})")
+            
+            # Save metadata for this project
+            save_success = save_metadata_from_query(query=item["query"])
+            if not save_success:
+                logger.error(f"Failed to save metadata for project {project_name}. Breaking process.")
+                break
+                
+            # Load the saved metadata
+            logger.info(f"Loading metadata for project {project_name}")
+            metadata = load_metadata()
+            if not metadata:
+                logger.error(f"Failed to load metadata for project {project_name}. Breaking process.")
+                break
+                
+            # Transform the metadata
+            logger.info(f"Transforming metadata for project {project_name}")
+            transform_status = transform_all(metadata)
+            
+            if not transform_status:
+                logger.error(f"Failed to transform metadata for project {project_name}. Breaking process.")
+                break
+                
+            logger.info(f"Successfully processed project {project_name}")
 
-            save_metadata_from_query(query=item["query"])
-
-        logger.info("All queries processed and metadata saved successfully.")
+        logger.info("Completed processing all projects")
 
     except Exception as e:
         logger.error(f"Error in {script_name}: {e}")
