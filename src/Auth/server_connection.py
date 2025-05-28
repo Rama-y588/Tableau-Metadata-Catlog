@@ -18,7 +18,7 @@ _profiles: Dict[str, Dict] = {}
 _default_profile_name: str = ""  # Guaranteed to be set after _load_config_and_env
 _connection_settings: Dict[str, int] = {}
 
-def _load_config_and_env() -> None:
+def load_config_and_env() -> None:
     """
     Loads server profiles from YAML and credentials/default profile from .env.
     This runs once when the module is imported.
@@ -100,7 +100,7 @@ def _load_config_and_env() -> None:
     logger.info(f"Loaded Tableau profiles: {list(_profiles.keys())}")
     logger.info(f"Default Tableau profile: {_default_profile_name}")
 
-_load_config_and_env()
+load_config_and_env()
 
 
 def get_tableau_server() -> TSC.Server:

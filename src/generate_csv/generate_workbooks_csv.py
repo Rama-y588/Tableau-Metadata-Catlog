@@ -1,113 +1,169 @@
 import csv
 import os
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
+from datetime import datetime
+import json
 
 from src.utils.logger import app_logger as logger
 from src.utils.helper import load_YAML_config
 from src.Transformations.list_workbooks import get_workbooks
 
+# --- Module Constants ---
 current_file = Path(__file__).resolve()
 project_root = current_file.parents[2]
 CONFIG_FILE_PATH = project_root / 'config' / 'csv_exporter.yaml'
+MODULE_NAME = current_file.name
 
+def validate_config(config: Dict[str, Any]) -> bool:
+    """
+    Validate the configuration dictionary for required settings.
+    
+    Args:
+        config (Dict[str, Any]): Configuration dictionary
+        
+    Returns:
+        bool: True if valid, False otherwise
+    """
+    required_settings = ['data_folder_path', 'temp_subfolder_name', 'workbooks_csv_filename']
+    file_settings = config.get('file_settings', {})
+    
+    missing_settings = [setting for setting in required_settings if not file_settings.get(setting)]
+    if missing_settings:
+        logger.error(f"[{MODULE_NAME}] Missing required settings: {', '.join(missing_settings)}")
+        return False
+    return True
 
-def generate_workbooks_csv_from_config(workbooks_data) -> None:
+def create_output_directory(directory: Path) -> bool:
+    """
+    Create output directory if it doesn't exist.
+    
+    Args:
+        directory (Path): Directory path to create
+        
+    Returns:
+        bool: True if successful, False otherwise
+    """
+    try:
+        os.makedirs(directory, exist_ok=True)
+        logger.info(f"[{MODULE_NAME}] Created/verified output directory: {directory}")
+        return True
+    except OSError as e:
+        logger.critical(f"[{MODULE_NAME}] Failed to create output directory '{directory}': {str(e)}")
+        return False
+
+def process_workbook_data(workbook: Dict[str, Any]) -> Dict[str, str]:
+    """
+    Process and validate workbook data for CSV output.
+    
+    Args:
+        workbook (Dict[str, Any]): Raw workbook data
+        
+    Returns:
+        Dict[str, str]: Processed workbook data
+    """
+    return {
+        'workbook_id': str(workbook.get('id', '')),
+        'workbook_name': str(workbook.get('name', '')),
+        'project_id': str(workbook.get('project_id', '')),
+        'project_name': str(workbook.get('project_name', '')),
+        'owner_id': str(workbook.get('owner_id', '')),
+        'description': str(workbook.get('description', '')),
+        'created_at': str(workbook.get('created_at', '')),
+        'updated_at': str(workbook.get('updated_at', '')),
+        'url': str(workbook.get('url', ''))
+    }
+
+def generate_workbooks_csv_from_config(workbooks_data: List[Dict[str, Any]]) -> bool:
     """
     Generates a CSV file from workbook data based on configuration settings.
     
     Args:
         workbooks_data (List[Dict[str, Any]]): List of workbook data dictionaries
+        
+    Returns:
+        bool: True if successful, False otherwise
     """
-    logger.info("Starting workbooks CSV generation process.")
+    start_time = datetime.now()
+    logger.info(f"[{MODULE_NAME}] Starting workbooks CSV generation process")
 
+    # Load and validate configuration
     config = load_YAML_config(CONFIG_FILE_PATH)
-    if not config:
-        logger.error("Failed to load configuration. Aborting workbooks CSV generation.")
-        return
+    if not config or not validate_config(config):
+        logger.error(f"[{MODULE_NAME}] Invalid configuration. Aborting CSV generation.")
+        return False
 
-    file_settings = config.get('file_settings', {})
-    data_folder_path_str = file_settings.get('data_folder_path')
-    temp_subfolder_name = file_settings.get('temp_subfolder_name')
-    workbooks_csv_filename = file_settings.get('workbooks_csv_filename')
+    file_settings = config['file_settings']
+    output_directory = project_root / file_settings['data_folder_path'] / file_settings['temp_subfolder_name']
+    csv_filepath = output_directory / file_settings['workbooks_csv_filename']
 
-    if not all([data_folder_path_str, temp_subfolder_name, workbooks_csv_filename]):
-        logger.error(
-            "Missing one or more required 'file_settings' keys "
-            "('data_folder_path', 'temp_subfolder_name', 'workbooks_csv_filename') in config."
-        )
-        return
+    # Create output directory
+    if not create_output_directory(output_directory):
+        return False
 
-    output_directory = project_root / data_folder_path_str / temp_subfolder_name
-    csv_filepath = output_directory / workbooks_csv_filename
-
-    try:
-        os.makedirs(output_directory, exist_ok=True)
-        logger.info(f"Ensured output directory exists: {output_directory}")
-    except OSError as e:
-        logger.critical(f"Error creating output directory '{output_directory}': {e}", exc_info=True)
-        return
-
+    # Validate input data
     if not workbooks_data:
-        logger.info("No workbooks data retrieved. Workbooks CSV will not be generated.")
-        return
+        logger.warning(f"[{MODULE_NAME}] No workbooks data provided. CSV will not be generated.")
+        return False
 
-    logger.info(f"Total workbooks found: {len(workbooks_data)}")
+    logger.info(f"[{MODULE_NAME}] Processing {len(workbooks_data)} workbooks")
 
-    # Sort workbooks by 'name'
-    sorted_workbooks = sorted(workbooks_data, key=lambda x: x.get('name', ''))
-
-    logger.debug("Sorted workbook details:")
-    for item in sorted_workbooks:
-        logger.debug(f"ID: {item.get('id', 'N/A')}, Name: {item.get('name', 'N/A')}, Project: {item.get('project_name', 'N/A')}")
-
-    headers = [
-        'workbook_id',
-        'workbook_name',
-        'project_id',
-        'project_name',
-        'owner_id',
-        'owner_name',
-        'description',
-        'created_at',
-        'updated_at'
-    ]
-
-    processed_workbooks = []
-    for workbook in sorted_workbooks:
-        processed_workbooks.append({
-            'workbook_id': workbook.get('id', "null"),
-            'workbook_name': workbook.get('name', "null"),
-            'project_id': workbook.get('project_id', "null"),
-            'project_name': workbook.get('project_name', "null"),
-            'owner_id': workbook.get('owner_id', "null"),
-            'description': workbook.get('description', "null"),
-            'created_at': workbook.get('created_at', "null"),
-            'updated_at': workbook.get('updated_at', "null")
-        })
-
-    logger.info(f"Writing workbooks CSV to: {csv_filepath}")
     try:
+        # Sort workbooks by name
+        sorted_workbooks = sorted(workbooks_data, key=lambda x: x.get('name', '').lower())
+        
+        # Define CSV headers
+        headers = [
+            'workbook_id', 'workbook_name', 'project_id', 'project_name',
+            'owner_id', 'description', 'created_at', 'updated_at', 'url'
+        ]
+
+        # Process workbooks
+        processed_workbooks = [process_workbook_data(wb) for wb in sorted_workbooks]
+
+        # Write to CSV
+        logger.info(f"[{MODULE_NAME}] Writing CSV to: {csv_filepath}")
         with open(csv_filepath, 'w', newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=headers)
             writer.writeheader()
             writer.writerows(processed_workbooks)
-        logger.info(f"Workbooks CSV file '{workbooks_csv_filename}' generated successfully at {csv_filepath}")
-    except IOError as e:
-        logger.critical(f"IOError while writing CSV file '{csv_filepath}': {e}", exc_info=True)
-    except Exception as e:
-        logger.critical(f"Unexpected error during CSV writing: {e}", exc_info=True)
 
+        processing_time = (datetime.now() - start_time).total_seconds()
+        logger.info(f"[{MODULE_NAME}] Successfully generated CSV with {len(processed_workbooks)} workbooks in {processing_time:.2f} seconds")
+        return True
+
+    except IOError as e:
+        logger.critical(f"[{MODULE_NAME}] IOError while writing CSV: {str(e)}")
+        return False
+    except Exception as e:
+        logger.critical(f"[{MODULE_NAME}] Unexpected error during CSV generation: {str(e)}")
+        return False
+
+def main() -> None:
+    """Main function for testing the module."""
+    logger.info(f"[{MODULE_NAME}] Starting script execution")
+    
+    try:
+        test_data_path = project_root / "sample_data" / "data_test.json"
+        logger.info(f"[{MODULE_NAME}] Loading test data from: {test_data_path}")
+        
+        with open(test_data_path, 'r', encoding='utf-8') as f:
+            raw_data = json.load(f)
+
+        workbooks_data = get_workbooks(raw_data=raw_data)
+        success = generate_workbooks_csv_from_config(workbooks_data)
+        
+        if success:
+            logger.info(f"[{MODULE_NAME}] Script completed successfully")
+        else:
+            logger.error(f"[{MODULE_NAME}] Script completed with errors")
+            
+    except FileNotFoundError:
+        logger.error(f"[{MODULE_NAME}] Test data file not found: {test_data_path}")
+    except json.JSONDecodeError:
+        logger.error(f"[{MODULE_NAME}] Invalid JSON in test data file")
+    except Exception as e:
+        logger.error(f"[{MODULE_NAME}] Unexpected error during script execution: {str(e)}")
 
 if __name__ == "__main__":
-    logger.info("Script execution started.")
-    import json
-    root_folder = Path(__file__).resolve().parents[2]
-    
-    test_data_path = root_folder / "sample_data" / "data_test.json"
-    with open(test_data_path, 'r') as f:
-        raw_data = json.load(f)
-
-    raw_data = get_workbooks(raw_data=raw_data)
-    generate_workbooks_csv_from_config(raw_data)
-    logger.info("Script execution finished.") 
+    main()
