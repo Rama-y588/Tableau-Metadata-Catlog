@@ -1,7 +1,7 @@
 import csv
 import os
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Union
+from typing import List, Dict, Any, Optional, Union,Set
 from datetime import datetime
 import json
 
@@ -75,9 +75,32 @@ def process_user_data(user: Dict[str, Any]) -> Dict[str, str]:
     }
 
 
+
+
+def read_existing_users(csv_filepath: Path) -> Set[str]:
+    """
+    Read existing user IDs from the CSV file to check for duplicates.
+    
+    Args:
+        csv_filepath (Path): Path to the CSV file
+        
+    Returns:
+        Set[str]: Set of existing user IDs
+    """
+    existing_users = set()
+    try:
+        if csv_filepath.exists():
+            with open(csv_filepath, 'r', newline='', encoding='utf-8') as csvfile:
+                reader = csv.DictReader(csvfile)
+                existing_users = {row['user_id'] for row in reader}
+            logger.info(f"[{MODULE_NAME}] Found {len(existing_users)} existing users in CSV file")
+    except Exception as e:
+        logger.error(f"[{MODULE_NAME}] Error reading existing users: {str(e)}")
+    return existing_users
+
 def write_users_to_csv(csv_filepath: Path, users_data: List[Dict[str, str]], is_new_file: bool = False) -> bool:
     """
-    Write multiple user records to the CSV file.
+    Write multiple user records to the CSV file, avoiding duplicates.
     
     Args:
         csv_filepath (Path): Path to the CSV file
@@ -88,25 +111,35 @@ def write_users_to_csv(csv_filepath: Path, users_data: List[Dict[str, str]], is_
         bool: True if successful, False otherwise
     """
     try:
-        mode = 'w' if is_new_file else 'a'
-        logger.info(f"[{MODULE_NAME}] Writing users to CSV file: {csv_filepath}")
+        # Get existing users if appending
+        existing_users = set() if is_new_file else read_existing_users(csv_filepath)
+        
+        # Filter out duplicate users
+        new_users = [user for user in users_data if user['user_id'] not in existing_users]
+        
+        if not new_users:
+            logger.info(f"[{MODULE_NAME}] No new users to write - all users already exist in CSV")
+            return True
+            
+        logger.info(f"[{MODULE_NAME}] Writing {len(new_users)} new users to CSV file: {csv_filepath}")
         logger.info(f"[{MODULE_NAME}] File mode: {'Create new file' if is_new_file else 'Append to existing file'}")
         
+        mode = 'w' if is_new_file else 'a'
         with open(csv_filepath, mode, newline='', encoding='utf-8') as csvfile:
             writer = csv.DictWriter(csvfile, fieldnames=CSV_HEADERS)
             if is_new_file:
                 logger.info(f"[{MODULE_NAME}] Writing headers: {CSV_HEADERS}")
                 writer.writeheader()
             
-            logger.info(f"[{MODULE_NAME}] Writing {len(users_data)} user records")
-            writer.writerows(users_data)
+            logger.info(f"[{MODULE_NAME}] Writing {len(new_users)} new user records")
+            writer.writerows(new_users)
             
-            # Log sample of data being written
-            if users_data:
-                sample_user = users_data[0]
-                logger.info(f"[{MODULE_NAME}] Sample user data being written: {sample_user}")
+            # Log sample of new data being written
+            if new_users:
+                sample_user = new_users[0]
+                logger.info(f"[{MODULE_NAME}] Sample new user data being written: {sample_user}")
         
-        logger.info(f"[{MODULE_NAME}] Successfully wrote data to CSV file")
+        logger.info(f"[{MODULE_NAME}] Successfully wrote new data to CSV file")
         return True
     except Exception as e:
         logger.error(f"[{MODULE_NAME}] Error writing to CSV: {str(e)}")
@@ -115,7 +148,7 @@ def write_users_to_csv(csv_filepath: Path, users_data: List[Dict[str, str]], is_
 def generate_users_csv_from_config(users_data: List[Dict[str, Any]]) -> str:
     """
     Generates a CSV file from user data based on configuration settings.
-    If the file exists, it will append new records. If not, it will create a new file.
+    If the file exists, it will append only new records. If not, it will create a new file.
     
     Args:
         users_data (List[Dict[str, Any]]): List of user data dictionaries
@@ -166,8 +199,8 @@ def generate_users_csv_from_config(users_data: List[Dict[str, Any]]) -> str:
         # Write all users to CSV
         if write_users_to_csv(csv_filepath, processed_users, not file_exists):
             processing_time = (datetime.now() - start_time).total_seconds()
-            logger.info(f"[{MODULE_NAME}] Successfully processed {len(processed_users)} users in {processing_time:.2f} seconds")
-            logger.info(f"[{MODULE_NAME}] CSV file generated successfully at: {csv_filepath}")
+            logger.info(f"[{MODULE_NAME}] Successfully processed users in {processing_time:.2f} seconds")
+            logger.info(f"[{MODULE_NAME}] CSV file updated successfully at: {csv_filepath}")
             return "Success"
         else:
             logger.error(f"[{MODULE_NAME}] Failed to write users to CSV file: {csv_filepath}")
@@ -176,6 +209,8 @@ def generate_users_csv_from_config(users_data: List[Dict[str, Any]]) -> str:
     except Exception as e:
         logger.critical(f"[{MODULE_NAME}] Unexpected error during CSV generation: {str(e)}")
         return "Failed"
+
+
 
 def main() -> None:
     """Main function for testing the module."""
