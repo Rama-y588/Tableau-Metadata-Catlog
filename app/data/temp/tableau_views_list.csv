@@ -1,2 +1,15 @@
-view_id,view_name,workbook_id,view_path,view_type,view_created_at,view_updated_at
-view_a1,Overview,123,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+viewid,view_name,path,view_type,created_at,updated_at
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
+view_a1,Overview,/views/overview,Dashboard,2024-01-15 10:00:00+00:00,2024-01-15 10:00:00+00:00
