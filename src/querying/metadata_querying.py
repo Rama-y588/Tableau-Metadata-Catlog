@@ -28,26 +28,25 @@ def get_output_path() -> Optional[Path]:
         
         file_settings = config.get('file_settings', {})
         data_folder_path_str = file_settings.get('data_folder_path')
-        temp_subfolder_name = file_settings.get('temp_subfolder_name')
+        metadata_folder_name = file_settings.get('metadata_folder_name')
         metadata_json_filename = file_settings.get('metadata_json_filename')
         
-        if not all([data_folder_path_str, temp_subfolder_name, metadata_json_filename]):
+        if not all([data_folder_path_str, metadata_folder_name, metadata_json_filename]):
             logger.error(f"[{FILE_NAME}] Missing required configuration settings")
             return None
             
-        return PROJECT_ROOT / data_folder_path_str / temp_subfolder_name / metadata_json_filename
+        return PROJECT_ROOT / data_folder_path_str / metadata_folder_name / metadata_json_filename
         
     except Exception as e:
         logger.error(f"[{FILE_NAME}] Error getting output path: {str(e)}")
         return None
 
-def fetch_and_save_metadata(query: str, output_file: Path) -> bool:
+def fetch_and_save_metadata(query: str) -> bool:
     """
     Executes the provided GraphQL query and saves the result to a JSON file.
 
     Args:
         query (str): The GraphQL query string to execute.
-        output_file (Path): The path to the output metadata.json file.
 
     Returns:
         bool: True if successful, False otherwise
@@ -61,6 +60,11 @@ def fetch_and_save_metadata(query: str, output_file: Path) -> bool:
             return False
             
         logger.info(f"[{FILE_NAME}] Query executed successfully. Saving metadata...")
+
+        # Get output path
+        output_file = get_output_path()
+        if not output_file:
+            return False
 
         # Create parent directory if it doesn't exist
         output_file.parent.mkdir(parents=True, exist_ok=True)
@@ -95,13 +99,8 @@ def save_metadata_from_query(query: str) -> bool:
     try:
         logger.info(f"[{FILE_NAME}] Starting metadata save process for query")
         
-        # Get output path from config
-        output_file = get_output_path()
-        if not output_file:
-            return False
-        
         # Fetch and save metadata
-        success = fetch_and_save_metadata(query, output_file)
+        success = fetch_and_save_metadata(query)
         
         if success:
             logger.info(f"[{FILE_NAME}] Successfully saved metadata from query")
@@ -113,4 +112,3 @@ def save_metadata_from_query(query: str) -> bool:
     except Exception as e:
         logger.error(f"[{FILE_NAME}] Unexpected error in save_metadata_from_query: {str(e)}")
         return False
-
