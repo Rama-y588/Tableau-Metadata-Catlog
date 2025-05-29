@@ -1,0 +1,166 @@
+Documentation:
+
+1.Introduction
+1.1 Overview
+The Tableau Metadata Catalog is a powerful and intuitive application designed to streamline the management, analysis, and visualization of metadata within Tableau environments. This software enables seamless exploration of Tableau assets—including projects, workbooks, data sources, connections, views, and analytics—through an interactive dashboard interface.
+
+Built with a focus on operational transparency and data governance, the application offers automated data extraction, transformation, and storage in well-organized CSV formats. Its integration with GraphQL enables advanced querying capabilities, while robust logging and configuration features support reliable, scalable usage.
+
+Key features include:
+
+Interactive Tableau Dashboard for exploring metadata
+
+Automated ETL processes for generating structured CSV outputs
+
+GraphQL-powered querying for detailed metadata analysis
+
+Advanced logging and error handling for operational integrity
+
+Flexible configuration management to suit diverse deployment needs
+
+
+1.2 Purpose
+The primary objective of the Tableau Metadata Catalog is to provide enhanced visibility into Tableau's data ecosystem, allowing organizations to efficiently monitor and manage the freshness and reliability of their Tableau data sources.
+
+Specifically, the application empowers users to:
+
+Track the last extract refresh times of published data sources and workbooks
+
+Identify and assign application ownership of Tableau workbooks
+
+Ensure data quality and timeliness for decision-makers
+
+Improve overall metadata governance and reporting workflows
+
+By offering actionable insights into Tableau metadata, this solution supports better operational awareness, proactive maintenance, and higher data trustworthiness across the organization.
+
+
+
+
+
+
+
+Installation & Setup
+
+2.1 ✅ Prerequisites
+
+Before setting up the application, ensure the following prerequisites are met:
+
+- Python 3.13.3 or higher must be installed on your system.
+  You can download the latest version from the official Python website: https://www.python.org/
+  To verify the installed version:
+  python --version
+
+- pip (Python's package installer) should be available.
+  To check if pip is installed:
+  pip --version
+
+- Access to the project .zip file
+  Download the x.zip file from the SharePoint link shared with you.
+
+--------------------------------------------
+
+2.2 ⚙️ Installation
+
+2.2.1 📥 Download and Extract
+
+- Download the x.zip archive from the SharePoint location.
+- Extract the contents to a preferred project directory on your system.
+
+🗂 Navigate to the Project Directory:
+cd <project_directory>
+
+🧪 Create a Virtual Environment:
+python -m venv venv
+
+Activate the virtual environment:
+
+Linux/macOS:
+source venv/bin/activate
+
+Windows:
+venv\Scripts\activate
+
+Note: Using a virtual environment ensures all dependencies are isolated from your global Python setup.
+
+📦 Install Dependencies:
+
+Upgrade pip:
+python -m pip install --upgrade pip
+
+Install the required packages:
+pip install -r requirements.txt
+
+--------------------------------------------
+
+2.3 🧷 Setup
+
+🔧 Configure pythonPath Environment Variable
+
+Windows:
+1. Open System Properties → Environment Variables.
+2. Add a new user variable:
+   Variable Name: pythonPath
+   Variable Value: <absolute_path_to_project_directory>
+
+Linux/macOS:
+1. Add this line to your shell profile (e.g., ~/.bashrc or ~/.zshrc):
+   export pythonPath=<absolute_path_to_project_directory>
+2. Apply the changes:
+   source ~/.bashrc  (or source ~/.zshrc)
+
+Replace <absolute_path_to_project_directory> with the actual full path.
+
+🔑 Configure Project Secrets
+
+1. Update (or create if not present) a `.env` file in the root of your project directory.
+
+2. Add or update the following content:
+
+TABLEAU_PAT_NAME=<your_pat_name>  
+TABLEAU_PAT_SECRET=<your_pat_secret>
+
+Note:
+- Replace the placeholders with your actual Tableau Personal Access Token (PAT) credentials.
+- 🚨 Do NOT share your .env file publicly or commit it to version control.
+
+
+
+
+
+conficuration
+🔧 Server Profile Configuration
+
+To enable communication with different Tableau Server environments, you need to define server profiles in the configuration file.
+
+1. Locate the following file in your project:
+   root_folder/config/server_profiles.yaml
+
+2. Open the file and add your server profile(s) using the following structure:
+
+# Example: Production Profile
+production:
+  url: "https://tableau.prod.yourcompany.com"
+  site_name: "Production"
+  api_version: "3.19"
+  description: "Connection profile for the Production Tableau Server environment."
+
+3. You can add multiple profiles (e.g., staging, dev) by duplicating the structure with different profile keys.
+
+# Example: Development Profile
+development:
+  url: "https://tableau.dev.yourcompany.com"
+  site_name: "Development"
+  api_version: "3.19"
+  description: "Connection profile for the Development Tableau Server environment."
+
+📌 Notes:
+- `url`: The base URL of the Tableau Server.
+- `site_name`: The Tableau site you want to connect to (use an empty string "" for the default site).
+- `api_version`: The version of the Tableau REST API in use.
+- `description`: Optional, for documentation purposes.
+
+✅ Make sure the key name (e.g., `production`) matches the value set in `TABLEAU_PROFILE` in your `.env` file.
+
+Example `.env` mapping:
+TABLEAU_PROFILE=production
