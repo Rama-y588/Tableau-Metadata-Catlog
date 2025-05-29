@@ -1,3 +1,0 @@
-Connection ID,Connection Name,Connection Type,Connects To,Creation Date,Last Modified Date
-conn_1,SQL_HR,SQL Server,Database,2025-05-27T07:18:46.446686,2025-05-27T07:18:46.446687
-conn_0,SalesforceDB,Salesforce,Database,2025-05-27T07:18:46.446679,2025-05-27T07:18:46.446681

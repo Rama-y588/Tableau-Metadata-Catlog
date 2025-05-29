@@ -2,99 +2,181 @@ import csv
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 from enum import Enum
 
 from src.utils.logger import app_logger as logger
 from src.utils.helper import load_YAML_config
 from src.Transformations.list_views import get_views
+from src.Auth import server_connection
 
 # --- Define root folder for standalone execution ---
 current_file = Path(__file__).resolve()
 project_root = current_file.parents[2]
 CONFIG_FILE_PATH = project_root / 'config' / 'csv_exporter.yaml'
 
-# Define module name for logging
-MODULE_NAME = "generate_views_csv"
+# Define module name for logging (using file name)
+MODULE_NAME = "generate_views_csv.py"
 
 class CSVGenerationStatus(Enum):
     SUCCESS = "Success"
     PARTIAL = "Partial"
     FAILED = "Failed"
 
-def generate_views_csv_from_config(views_data) -> str:
+def construct_view_url(view_path: str) -> str:
+    """
+    Constructs a Tableau view URL using the view path.
+    
+    Args:
+        view_path (str): Path of the view
+        
+    Returns:
+        str: Constructed view URL
+    """
+    try:
+        profile_name = server_connection._default_profile_name
+        if not profile_name:
+            logger.error(f"[{MODULE_NAME}] No default profile name found")
+            return ""
+
+        server_config = server_connection._profiles.get(profile_name)
+        if not server_config:
+            logger.error(f"[{MODULE_NAME}] No server configuration found for profile: {profile_name}")
+            return ""
+
+        base_url = server_config.get('url', '').strip()
+        site_name = server_config.get('site_name', '').strip()
+        
+        if not base_url or not site_name:
+            logger.error(f"[{MODULE_NAME}] Missing required server configuration: url or site_name")
+            return ""
+            
+        # Remove any leading/trailing slashes from view_path
+        view_path = view_path.strip('/')
+        
+        # Construct the URL properly
+        view_url = f"https://{base_url}/#/site/{site_name}/views/{view_path}"
+        
+        logger.debug(f"[{MODULE_NAME}] Constructed view URL: {view_url}")
+        return view_url
+    except Exception as e:
+        logger.error(f"[{MODULE_NAME}] Error constructing view URL: {str(e)}", exc_info=True)
+        return ""
+
+def format_datetime(dt: Optional[datetime]) -> str:
+    """
+    Formats datetime object to ISO format string.
+    
+    Args:
+        dt (Optional[datetime]): Datetime object to format
+        
+    Returns:
+        str: Formatted datetime string or empty string if None
+    """
+    if isinstance(dt, datetime):
+        return dt.isoformat()
+    return ""
+
+def generate_views_csv_from_config(views_data: List[Dict[str, Any]]) -> Dict[str, Any]:
     """
     Generates a CSV file from view data based on configuration settings.
-    Appends all views to the CSV file with simplified fields.
     
     Args:
         views_data (List[Dict[str, Any]]): List of view data dictionaries
         
     Returns:
-        str: Status of the operation ("Success", "Partial", or "Failed")
+        Dict[str, Any]: Status dictionary containing:
+            - status: "Success", "Partial", or "Failed"
+            - total_views: Total number of views processed
+            - processed_views: Number of views successfully written
+            - error_message: Error message if any
+            - file_path: Path to the generated CSV file
     """
     start_time = datetime.now()
     logger.info(f"[{MODULE_NAME}] Starting views CSV generation process")
+    
+    status = {
+        "status": CSVGenerationStatus.SUCCESS.value,
+        "total_views": 0,
+        "processed_views": 0,
+        "error_message": None,
+        "file_path": None
+    }
 
+    # Load configuration
     config = load_YAML_config(CONFIG_FILE_PATH)
     if not config:
-        logger.error(f"[{MODULE_NAME}] Failed to load configuration. Aborting views CSV generation.")
-        return CSVGenerationStatus.FAILED.value
+        error_msg = "Failed to load configuration"
+        logger.error(f"[{MODULE_NAME}] {error_msg}")
+        status["error_message"] = error_msg
+        return status
 
+    # Validate file settings
     file_settings = config.get('file_settings', {})
-    data_folder_path_str = file_settings.get('data_folder_path')
-    temp_subfolder_name = file_settings.get('temp_subfolder_name')
-    views_csv_filename = file_settings.get('views_csv_filename')
+    required_settings = ['data_folder_path', 'temp_subfolder_name', 'views_csv_filename']
+    missing_settings = [setting for setting in required_settings if not file_settings.get(setting)]
+    
+    if missing_settings:
+        error_msg = f"Missing required 'file_settings' keys: {', '.join(missing_settings)}"
+        logger.error(f"[{MODULE_NAME}] {error_msg}")
+        status["error_message"] = error_msg
+        return status
 
-    if not all([data_folder_path_str, temp_subfolder_name, views_csv_filename]):
-        logger.error(
-            f"[{MODULE_NAME}] Missing one or more required 'file_settings' keys "
-            "('data_folder_path', 'temp_subfolder_name', 'views_csv_filename') in config."
-        )
-        return CSVGenerationStatus.FAILED.value
+    # Setup file paths
+    output_directory = project_root / file_settings['data_folder_path'] / file_settings['temp_subfolder_name']
+    csv_filepath = output_directory / file_settings['views_csv_filename']
+    status["file_path"] = str(csv_filepath)
 
-    output_directory = project_root / data_folder_path_str / temp_subfolder_name
-    csv_filepath = output_directory / views_csv_filename
-
+    # Create output directory
     try:
         os.makedirs(output_directory, exist_ok=True)
         logger.info(f"[{MODULE_NAME}] Ensured output directory exists: {output_directory}")
     except OSError as e:
-        logger.critical(f"[{MODULE_NAME}] Error creating output directory '{output_directory}': {e}", exc_info=True)
-        return CSVGenerationStatus.FAILED.value
+        error_msg = f"Error creating output directory: {str(e)}"
+        logger.critical(f"[{MODULE_NAME}] {error_msg}", exc_info=True)
+        status["error_message"] = error_msg
+        return status
 
+    # Validate views data
     if not views_data:
         logger.info(f"[{MODULE_NAME}] No views data retrieved. Views CSV will not be generated.")
-        return CSVGenerationStatus.SUCCESS.value
+        status["status"] = CSVGenerationStatus.SUCCESS.value
+        return status
 
-    logger.info(f"[{MODULE_NAME}] Total views found: {len(views_data)}")
+    status["total_views"] = len(views_data)
+    logger.info(f"[{MODULE_NAME}] Total views found: {status['total_views']}")
 
-    # Sort views by 'name'
+    # Sort views by name
     sorted_views = sorted(views_data, key=lambda x: x.get('name', ''))
 
-    # Simplified headers with only required fields
+    # Define headers
     headers = [
-        'viewid',
+        'view_id',
         'view_name',
-        'path',
         'view_type',
-        'created_at',
-        'updated_at'
+        'view_created_at',
+        'view_updated_at',
+        'view_url'
     ]
 
-    # Process views with only required fields
+    # Process views
     processed_views = []
     for view in sorted_views:
-        processed_views.append({
-            'viewid': view.get('id', "null"),
-            'view_name': view.get('name', "null"),
-            'path': view.get('path', "null"),
-            'view_type': view.get('type', "null"),
-            'created_at': view.get('created_at', "null"),
-            'updated_at': view.get('updated_at', "null")
-        })
+        try:
+            processed_view = {
+                'view_id': str(view.get('id', '')),
+                'view_name': str(view.get('name', '')),
+                'view_type': str(view.get('type', '')),
+                'view_created_at': format_datetime(view.get('created_at')),
+                'view_updated_at': format_datetime(view.get('updated_at')),
+                'view_url': construct_view_url(view.get('path', ''))
+            }
+            processed_views.append(processed_view)
+        except Exception as e:
+            logger.error(f"[{MODULE_NAME}] Error processing view {view.get('id', 'unknown')}: {str(e)}")
+            continue
 
-    # Check if file exists to determine mode
+    # Write to CSV
     file_exists = csv_filepath.exists()
     mode = 'a' if file_exists else 'w'
     
@@ -106,18 +188,25 @@ def generate_views_csv_from_config(views_data) -> str:
                 writer.writeheader()
             writer.writerows(processed_views)
         
+        status["processed_views"] = len(processed_views)
+        status["status"] = CSVGenerationStatus.SUCCESS.value
+        
         processing_time = (datetime.now() - start_time).total_seconds()
         logger.info(f"[{MODULE_NAME}] Successfully processed views in {processing_time:.2f} seconds")
         logger.info(f"[{MODULE_NAME}] Views CSV file updated successfully at: {csv_filepath}")
-        return CSVGenerationStatus.SUCCESS.value
         
     except IOError as e:
-        logger.critical(f"[{MODULE_NAME}] IOError while writing CSV file '{csv_filepath}': {e}", exc_info=True)
-        return CSVGenerationStatus.FAILED.value
+        error_msg = f"IOError while writing CSV file: {str(e)}"
+        logger.critical(f"[{MODULE_NAME}] {error_msg}", exc_info=True)
+        status["error_message"] = error_msg
+        status["status"] = CSVGenerationStatus.FAILED.value
     except Exception as e:
-        logger.critical(f"[{MODULE_NAME}] Unexpected error during CSV writing: {e}", exc_info=True)
-        return CSVGenerationStatus.FAILED.value
+        error_msg = f"Unexpected error during CSV writing: {str(e)}"
+        logger.critical(f"[{MODULE_NAME}] {error_msg}", exc_info=True)
+        status["error_message"] = error_msg
+        status["status"] = CSVGenerationStatus.FAILED.value
 
+    return status
 
 if __name__ == "__main__":
     logger.info(f"[{MODULE_NAME}] Script execution started.")
@@ -133,6 +222,14 @@ if __name__ == "__main__":
     
     # Generate CSV and get status
     status = generate_views_csv_from_config(views_data)
-    logger.info(f"[{MODULE_NAME}] CSV generation status: {status}")
+    
+    # Log detailed status
+    logger.info(f"[{MODULE_NAME}] CSV Generation Status:")
+    logger.info(f"[{MODULE_NAME}]   Status: {status['status']}")
+    logger.info(f"[{MODULE_NAME}]   Total Views: {status['total_views']}")
+    logger.info(f"[{MODULE_NAME}]   Processed Views: {status['processed_views']}")
+    if status['error_message']:
+        logger.error(f"[{MODULE_NAME}]   Error: {status['error_message']}")
+    logger.info(f"[{MODULE_NAME}]   File Path: {status['file_path']}")
     
     logger.info(f"[{MODULE_NAME}] Script execution finished.")

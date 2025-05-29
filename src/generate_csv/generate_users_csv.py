@@ -165,7 +165,7 @@ def generate_users_csv_from_config(users_data: List[Dict[str, Any]]) -> str:
         logger.error(f"[{MODULE_NAME}] Invalid configuration. Aborting CSV generation.")
         return "Failed"
 
-    file_settings = config['file_settings']
+    file_settings = config['csv_paths']
     output_directory = project_root / file_settings['data_folder_path'] / file_settings['temp_subfolder_name']
     csv_filepath = output_directory / file_settings['users_csv_filename']
 

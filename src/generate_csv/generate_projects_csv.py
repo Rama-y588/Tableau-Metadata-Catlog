@@ -98,7 +98,7 @@ def generate_project_csv_from_config():
         return
 
     # Extract file settings from the loaded configuration
-    file_settings = config.get('file_settings', {})
+    file_settings = config.get('csv_paths', {})
     data_folder_path_str = file_settings.get('data_folder_path')
     temp_subfolder_name = file_settings.get('temp_subfolder_name')
     project_csv_filename = file_settings.get('project_csv_filename')

@@ -9,6 +9,35 @@ file_settings:
   datasources_csv_filename : "tableau_datasources_list.csv"
   connections_csv_filename : "tableau_connections_list.csv"
   datasource_connections_csv_filename: "tableau_datasource_connections_list.csv"
+  "workbook_datasources_csv_filename" : "tableau_workbook_datasources_list.csv"
+  "workbook_tags_csv_filename" : "tableau_workbook_tags_list.csv"
   tags_csv_filename : "tableau_tags_list.csv"
+  "workbook_views_csv_filename" : "tableau_workbook_views_list.csv"
   metadata_json_filename : "metadata.json"
   metadata_folder_name: "metadata"
+
+csv_paths:
+  data_folder_path: "app\\data" # Or "C:/YourApp/data" on Windows, or use a relative path like "data"
+  temp_subfolder_name: "temp"
+  project_csv_filename: "tableau_project_list.csv"
+  users_csv_filename : "tableau_user_list.csv"
+  workbook_csv_filename : "tableau_workbook_list.csv"
+  views_csv_filename : "tableau_views_list.csv"
+  workbooks_csv_filename : "tableau_workbooks_list.csv"
+  datasources_csv_filename : "tableau_datasources_list.csv"
+  connections_csv_filename : "tableau_connections_list.csv"
+  datasource_connections_csv_filename: "tableau_datasource_connections_list.csv"
+  "workbook_datasources_csv_filename" : "tableau_workbook_datasources_list.csv"
+  "workbook_tags_csv_filename" : "tableau_workbook_tags_list.csv"
+  tags_csv_filename : "tableau_tags_list.csv"
+  "workbook_views_csv_filename" : "tableau_workbook_views_list.csv"
+
+backup_paths:
+  backup_folder_path: "" 
+  temp_backup_folder_path : ""app\\data""
+  backup_folder_name: "backup"
+
+"prod_files":
+  product_folder_path: ""
+  temp_product_folder_path: "app\\data"
+  product_folder_name: "backup"

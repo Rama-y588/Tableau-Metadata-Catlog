@@ -65,7 +65,7 @@ def get_datasources(raw_data: Dict[str, Any]) -> List[Dict[str, Any]]:
                     'name': datasource_name,
                     'workbook_id': workbook_id,
                     'path': ds.get('path', ''),
-                    'type': 'upstream',
+                    'type': 'published',
                     'has_extracts': ds.get('hasExtracts', False),
                     'extract_last_refresh_time': _parse_datetime(ds.get('extractLastRefreshTime')),
                     'created_at': datetime.now(),
