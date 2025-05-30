@@ -1,1 +1,148 @@
+SCHEMA AND DESCRIPTION OF GENERATED CSV FILES
+=============================================
+
+📌 Note:
+This section documents the **schema and description of CSV files generated** by the Tableau Metadata Extractor. These files provide structured metadata about Tableau connections, datasources, workbooks, views, users, and tags, used for reporting, auditing, and governance purposes.
+
+---------------------------------------------------------------------
+SECTION 1: CONNECTIONS
+---------------------------------------------------------------------
+File: tableau_connections_list.csv
+
+Description:
+Lists all connections to external data sources used in Tableau, such as databases or platforms like Salesforce.
+
+Columns:
+- connection_id: A unique identifier for each connection.
+- connection_name: The name assigned to the connection.
+- connection_type: The type of data source (e.g., Salesforce, SQL Server).
+- connection_to: The destination type of the connection (e.g., "Database").
+
+---------------------------------------------------------------------
+SECTION 2: DATASOURCES
+---------------------------------------------------------------------
+Files:
+- tableau_datasources_list.csv
+- tableau_datasource_connections_list.csv
+
+A) File: tableau_datasources_list.csv
+
+Description:
+Contains metadata about all Tableau datasources that are embedded or published.
+
+Columns:
+- datasource_id: Unique identifier for the datasource.
+- datasource_name: Human-readable name of the datasource.
+- datasource_type: Indicates if it's "embedded" or "published".
+- datasource_has_extracts: Boolean value indicating whether it has extracts.
+- datasource_last_extract_refresh: Timestamp of the last extract refresh.
+- datasource_creation_date: Timestamp of datasource creation.
+- datasource_last_modified_date: Timestamp of the last modification.
+
+B) File: tableau_datasource_connections_list.csv
+
+Description:
+Links each datasource to its corresponding connection.
+
+Columns:
+- datasource_id: Foreign key referencing the datasource.
+- connection_id: Foreign key referencing the connection.
+
+---------------------------------------------------------------------
+SECTION 3: WORKBOOKS AND THEIR RELATIONS
+---------------------------------------------------------------------
+Files:
+- tableau_workbooks_list.csv
+- tableau_workbook_datasources_list.csv
+- tableau_workbook_views_list.csv
+- tableau_workbook_tags_list.csv
+
+A) File: tableau_workbooks_list.csv
+
+Description:
+Lists all Tableau workbooks available on the server/site.
+
+Columns:
+- workbook_id: Unique identifier for the workbook.
+- workbook_name: Name/title of the workbook.
+- workbook_project_id: Identifier of the project under which the workbook is grouped.
+- workbook_owner_id: User ID of the workbook owner.
+- workbook_description: Text description of the workbook.
+- workbook_created_at: Creation timestamp.
+- workbook_updated_at: Last updated timestamp.
+- workbook_url: Direct URL to access the workbook on Tableau Server.
+
+B) File: tableau_workbook_datasources_list.csv
+
+Description:
+Defines the relationship between workbooks and datasources they use.
+
+Columns:
+- workbook_id: Foreign key referencing the workbook.
+- datasource_id: Foreign key referencing the datasource.
+
+C) File: tableau_workbook_views_list.csv
+
+Description:
+Defines the relationship between workbooks and their views (dashboards/sheets).
+
+Columns:
+- workbook_id: Foreign key referencing the workbook.
+- view_id: Foreign key referencing the view.
+
+D) File: tableau_workbook_tags_list.csv
+
+Description:
+Defines which tags are associated with which workbooks.
+
+Columns:
+- workbook_id: Foreign key referencing the workbook.
+- tag_id: Foreign key referencing the tag.
+
+---------------------------------------------------------------------
+SECTION 4: VIEWS
+---------------------------------------------------------------------
+File: tableau_views_list.csv
+
+Description:
+Represents the dashboards or sheets inside workbooks.
+
+Columns:
+- view_id: Unique identifier of the view.
+- view_name: Name/title of the view.
+- view_type: Type of the view (e.g., Dashboard, Worksheet).
+- view_created_at: Timestamp when the view was created.
+- view_updated_at: Timestamp when the view was last modified.
+- view_url: URL to directly access the view.
+
+---------------------------------------------------------------------
+SECTION 5: USERS AND TAGS
+---------------------------------------------------------------------
+Files:
+- tableau_user_list.csv
+- tableau_tags_list.csv
+
+A) File: tableau_user_list.csv
+
+Description:
+List of users who have access to Tableau assets.
+
+Columns:
+- user_id: Unique ID of the user.
+- user_name: Full name of the user.
+- user_username: Tableau server username.
+- user_email: User's email address.
+
+B) File: tableau_tags_list.csv
+
+Description:
+List of tags used to categorize workbooks or views for easier search and classification.
+
+Columns:
+- tag_id: Unique identifier of the tag.
+- tag_name: Name/label of the tag (e.g., HR, Sales, Marketing).
+
+---------------------------------------------------------------------
+END OF DOCUMENT
+---------------------------------------------------------------------
 
